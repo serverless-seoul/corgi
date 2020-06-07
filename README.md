@@ -2,7 +2,8 @@
 [![npm version](https://badge.fury.io/js/vingle-corgi.svg)](https://badge.fury.io/js/vingle-corgi)
 
 # Corgi
-[Grape](https://github.com/ruby-grape/grape) like lightweight HTTP API Framework for AWS Lambda
+[Grape](https://github.com/ruby-grape/grape) like lightweight HTTP API Framework for AWS Lambda  
+This is hard fork of [vingle-corgi](https://github.com/balmbees/corgi) for stable maintenance purpose  
 
 ## Example
 ```typescript
