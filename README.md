@@ -1,9 +1,9 @@
-[![Travis Build Status](https://travis-ci.org/balmbees/corgi.svg?branch=master)](https://travis-ci.org/balmbees/corgi)
+[![Travis Build Status](https://travis-ci.org/serverless-seoul/corgi.svg?branch=master)](https://travis-ci.org/serverless-seoul/corgi)
 [![npm version](https://badge.fury.io/js/vingle-corgi.svg)](https://badge.fury.io/js/vingle-corgi)
 
 # Corgi
 [Grape](https://github.com/ruby-grape/grape) like lightweight HTTP API Framework for AWS Lambda  
-This is hard fork of [vingle-corgi](https://github.com/balmbees/corgi) for stable maintenance purpose  
+This is hard fork of [vingle-corgi](https://github.com/serverless-seoul/corgi) for stable maintenance purpose  
 
 ## Example
 ```typescript

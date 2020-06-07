@@ -23,14 +23,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/balmbees/corgi.git"
+    "url": "git+https://github.com/serverless-seoul/corgi.git"
   },
   "author": "Kurt Lee",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/balmbees/corgi/issues"
+    "url": "https://github.com/serverless-seoul/corgi/issues"
   },
-  "homepage": "https://github.com/balmbees/corgi#readme",
+  "homepage": "https://github.com/serverless-seoul/corgi#readme",
   "devDependencies": {
     "@types/chai": "4.1.7",
     "@types/mocha": "2.2.48",
