@@ -1,5 +1,5 @@
 {
-  "name": "vingle-corgi",
+  "name": "@serverless-seoul/corgi",
   "version": "3.2.0",
   "description": "Restful HTTP Framework for AWS Lambda - AWS API Gateway Proxy Integration",
   "main": "./dst/index.js",
@@ -21,6 +21,9 @@
   "files": [
     "dst"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/serverless-seoul/corgi.git"
