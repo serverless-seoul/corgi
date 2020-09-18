@@ -13,7 +13,7 @@
     "prebuild": "npm run clean",
     "build": "check-engine && tsc -d",
     "lint": "tslint -p ./tsconfig.test.json",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "pretest": "npm run build -- -p ./tsconfig.test.json",
     "ci:publish": "publish",
     "test": "mocha dst/**/__test__/**/*_spec.js"
