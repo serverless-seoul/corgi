@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import * as pathToRegexp from "path-to-regexp";
+import { Key as PathKey, pathToRegexp } from "path-to-regexp";
 
 import { TimeoutError } from ".";
 import * as LambdaProxy from "./lambda-proxy";
@@ -110,7 +110,7 @@ export class Router {
   }
 
   // tslint:disable-next-line:member-ordering
-  private readonly routeToPathRegexpCache = new Map<Route, { regexp: RegExp, keys: pathToRegexp.Key[] }>();
+  private readonly routeToPathRegexpCache = new Map<Route, { regexp: RegExp, keys: PathKey[] }>();
 
   public async resolve(
     event: LambdaProxy.Event, options: { timeout: number, requestId?: string }
@@ -125,7 +125,7 @@ export class Router {
           let p = this.routeToPathRegexpCache.get(endRoute);
           if (!p) {
             const joinedPath = routesList.map(r => r.path).join("");
-            const keys: pathToRegexp.Key[] = [];
+            const keys: PathKey[] = [];
             const regexp = pathToRegexp(joinedPath, keys);
             p = { keys, regexp };
 
