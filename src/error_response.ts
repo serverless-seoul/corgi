@@ -32,8 +32,9 @@ export interface StandardErrorResponseBody {
 import * as crypto from "crypto";
 
 export class ErrorResponseFormatter {
-
   private static readonly CipherAlgorithm = "aes-128-cbc";
+  private static readonly SEPARATOR = "$";
+
   // If Password is provided, it will show detailed information (encrypted)
   constructor(private password: string | undefined) {}
 
@@ -56,18 +57,26 @@ export class ErrorResponseFormatter {
 
   public encryptErrorMetadata(error: Error) {
     if (this.password) {
-      const iv = new Buffer(crypto.randomBytes(8)).toString("hex");
+      // For both CBC mode and CFB mode, the initialization vector is the size of a block
+      // So, AES-128-CBC requires 128bit IV block, which equals to 16 bytes.
+      const iv = crypto.randomBytes(16);
       const cipher = crypto.createCipheriv(ErrorResponseFormatter.CipherAlgorithm, this.password, iv);
-      cipher.setEncoding("hex");
-      cipher.write(JSON.stringify({
-        name: error.name,
-        message: error.message,
-        stack: (error.stack || "").split("\n"),
-      }));
-      cipher.end();
-      const cipherText = cipher.read();
 
-      return cipherText + "$" + iv;
+      const data = Buffer.from(
+        JSON.stringify({
+          name: error.name,
+          message: error.message,
+          stack: (error.stack || "").split("\n"),
+        }),
+        "utf8",
+      );
+
+      const encrypted = Buffer.concat([
+        cipher.update(data),
+        cipher.final(),
+      ]);
+
+      return [encrypted, iv].map((buf) => buf.toString("hex")).join(ErrorResponseFormatter.SEPARATOR);
     } else {
       // Otherwise don't show metadata for security
       return undefined;
@@ -75,12 +84,16 @@ export class ErrorResponseFormatter {
   }
 
   public decryptErrorMetadata(message: string) {
-    const [decipherText, iv] = message.split("$");
-    const decipher = crypto.createDecipheriv(ErrorResponseFormatter.CipherAlgorithm, this.password, iv);
-    const payload = JSON.parse([
-      decipher.update(decipherText, "hex", "utf8"),
-      decipher.final("utf8"),
-    ].join(""));
-    return payload;
+    if (this.password) {
+      const [encrypted, iv] = message.split(ErrorResponseFormatter.SEPARATOR).map((hex) => Buffer.from(hex, "hex"));
+      const decipher = crypto.createDecipheriv(ErrorResponseFormatter.CipherAlgorithm, this.password, iv);
+
+      const decrypted = Buffer.concat([
+        decipher.update(encrypted),
+        decipher.final(),
+      ]);
+
+      return JSON.parse(decrypted.toString("utf8"));
+    }
   }
 }
