@@ -16,7 +16,7 @@ const DefaultJoiValidateOptions: Joi.ValidationOptions = {
 // ---- RoutingContext
 export class RoutingContext {
 
-  get headers(): LambdaProxy.EventHeaders {
+  get headers(): LambdaProxy.Event["headers"] {
     // normalize works lazily and should be cached for further use
     return this.normalizedHeaders
       || (this.normalizedHeaders = this.normalizeHeaders(this.request.headers));
@@ -41,7 +41,7 @@ export class RoutingContext {
         }
       }
       case "text": {
-        return body;
+        return body ?? undefined;
       }
       case "application/json":
       default: {
@@ -108,7 +108,7 @@ export class RoutingContext {
   public json(
     json: any,
     statusCode: number = 200,
-    headers: LambdaProxy.EventHeaders = {}
+    headers: NonNullable<LambdaProxy.Response["headers"]> = {}
   ): LambdaProxy.Response {
     return {
       statusCode,
@@ -135,7 +135,7 @@ export class RoutingContext {
   }
 
   // Helper for normalizing request headers
-  private normalizeHeaders(headers: LambdaProxy.EventHeaders = {}) {
+  private normalizeHeaders(headers: LambdaProxy.Event["headers"] = {}) {
     return Object.keys(headers).reduce((hash, key) => {
       hash[key.toLowerCase()] = headers[key];
 
