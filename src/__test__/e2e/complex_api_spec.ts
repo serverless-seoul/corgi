@@ -33,7 +33,7 @@ describe("Calling complex API", () => {
               //
             },
             children: [
-              Route.POST("/", { operationId: "follow" }, {
+              Route.POST("", { operationId: "follow" }, {
                 testId: Parameter.Query(Joi.number()),
                 update: Parameter.Body(
                   Joi.object({
@@ -51,7 +51,7 @@ describe("Calling complex API", () => {
                 });
               }),
 
-              Route.PATCH("/", { operationId: "patchFollow" }, {
+              Route.PATCH("", { operationId: "patchFollow" }, {
                 testId: Parameter.Query(Joi.number()),
               }, async function() {
                 const userId = this.params.userId as number;
@@ -63,7 +63,7 @@ describe("Calling complex API", () => {
                 });
               }),
 
-              Route.DELETE("/", { operationId: "unfollow" }, {}, async function() {
+              Route.DELETE("", { operationId: "unfollow" }, {}, async function() {
                 const userId = this.params.userId as number;
                 return this.json({ userId });
               }),
@@ -115,7 +115,7 @@ describe("Calling complex API", () => {
 });
 
 describe("Calling complex API", () => {
-  it("should pass paramseters to child namespaces", async () => {
+  it("should pass parameters to child namespaces", async () => {
     const befores: any[] = [];
     const routes: Routes = [
       new Namespace("/a/:a", {
@@ -136,7 +136,7 @@ describe("Calling complex API", () => {
               this.params.bar = { a: this.params.a, b: this.params.b };
             },
             children: [
-              Route.GET("/", { operationId: "get" }, {}, async function() {
+              Route.GET("", { operationId: "get" }, {}, async function() {
                 return this.json([
                   this.params.foo,
                   this.params.bar,
@@ -192,7 +192,7 @@ describe("Global Error Handling", () => {
         children: [
           new Namespace("/users/:userId", {
             children: [
-              Route.GET("/", { operationId: "getUser" }, {
+              Route.GET("", { operationId: "getUser" }, {
                 testId: Parameter.Query(Joi.number()),
                 otherError: Parameter.Query(Joi.number()),
               }, async function() {

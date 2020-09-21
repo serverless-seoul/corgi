@@ -58,12 +58,12 @@ export class OpenAPIRoute extends Namespace {
     super(path, {
       children: [
         Route.OPTIONS(
-          "/", { desc: "CORS Preflight Endpoint for OpenAPI Documentation API", operationId: "optionOpenAPI" }, {},
+          "", { desc: "CORS Preflight Endpoint for OpenAPI Documentation API", operationId: "optionOpenAPI" }, {},
           async function() {
             return this.json("", 204, CorsHeaders(this.headers.origin));
           }),
 
-        Route.GET("/", { desc: "OpenAPI Documentation API", operationId: "getOpenAPI" }, {},
+        Route.GET("", { desc: "OpenAPI Documentation API", operationId: "getOpenAPI" }, {},
           async function() {
             const docGenerator = new OpenAPIGenerator();
             const json = docGenerator.generateJSON(info, this.request, routes);
@@ -168,7 +168,7 @@ export class OpenAPIGenerator {
                 content: {
                   "application/json": {
                     schema: {
-                      type: "object",
+                      type: "object" as const,
                       properties: _.fromPairs(bodyParams),
                       required: bodyParams.map(pair => pair[0]),
                     }
