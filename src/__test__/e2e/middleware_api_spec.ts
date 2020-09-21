@@ -47,7 +47,9 @@ describe("Calling complex middleware connected API", () => {
               const { response } = options;
               // 3
               if (response.statusCode === 500) {
-                response.headers.error = "XX";
+                if (response.headers) {
+                  response.headers.error = "XX";
+                }
               }
               return options.response;
             }
