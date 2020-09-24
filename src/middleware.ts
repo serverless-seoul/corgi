@@ -21,15 +21,14 @@ export class Middleware<Metadata= any> {
 }
 
 export interface MiddlewareBeforeOptions<Metadata> {
-  routingContext: RoutingContext;
-
-  currentRoute: Route;
+  routingContext: RoutingContext<any, any>;
+  currentRoute: Route<any, any>;
   metadata?: Metadata;
 }
 
 export interface MiddlewareAfterOptions<Metadata> {
-  routingContext: RoutingContext;
-  currentRoute: Route;
+  routingContext: RoutingContext<any, any>;
+  currentRoute: Route<any, any>;
   metadata?: Metadata;
   response: Response;
 }

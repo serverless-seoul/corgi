@@ -129,7 +129,7 @@ describe("Router", () => {
 
     it("should raise timeout if it's really get delayed", async () => {
       const router = new Router([
-        new Namespace("/", {
+        new Namespace("/", {}, {
           async exceptionHandler(error: Error) {
             if (error instanceof TimeoutError) {
               return this.json({

@@ -1,10 +1,10 @@
-import * as _ from "lodash";
+import { OptionalModifier, TStatic } from "@catchfashion/typebox";
 import * as OpenApi from "openapi3-ts";
-import JoiToJSONSchema = require("vingle-corgi-joi-to-json-schema");
 
 import * as LambdaProxy from "../lambda-proxy";
 
 import { Namespace, Routes } from "../namespace";
+import { ParameterDefinition, ParameterInputType } from "../parameter";
 import { JSONSchema, Route} from "../route";
 
 import { flattenRoutes } from "../router";
@@ -15,29 +15,7 @@ export type OpenAPIRouteOptions = (
   { definitions?: { [definitionsName: string]: JSONSchema } }
 );
 
-function deepOmit(obj: any, keysToOmit: string[]) {
-  const keysToOmitIndex = _.keyBy(keysToOmit); // create an index object of the keys that should be omitted
-
-  const omitFromObject = (objectToOmit: any) => {
-    // the inner function which will be called recursively
-    return _.transform(objectToOmit, function(result: any, value, key) { // transform to a new object
-      if (key in keysToOmitIndex) { // if the key is in the index skip it
-        return;
-      }
-
-      // if the key is an object run it through the inner function - omitFromObject
-      result[key] = _.isObject(value) ? omitFromObject(value) : value;
-    });
-  };
-
-  return omitFromObject(obj); // return the inner function result
-}
-
-function convertJoiToJSONSchema(joi: any) {
-  return deepOmit(JoiToJSONSchema(joi), ["additionalProperties", "patterns"]);
-}
-
-export class OpenAPIRoute extends Namespace {
+export class OpenAPIRoute extends Namespace<any, any> {
   constructor(
     path: string,
     info: OpenAPIRouteOptions,
@@ -55,7 +33,7 @@ export class OpenAPIRoute extends Namespace {
       };
     };
 
-    super(path, {
+    super(path, {}, {
       children: [
         Route.OPTIONS(
           "", { desc: "CORS Preflight Endpoint for OpenAPI Documentation API", operationId: "optionOpenAPI" }, {},
@@ -87,7 +65,7 @@ export class OpenAPIGenerator {
     const paths: OpenApi.PathsObject = {};
 
     flattenRoutes(cascadedRoutes).forEach((routes) => {
-      const endRoute = (routes[routes.length - 1] as Route);
+      const endRoute = (routes[routes.length - 1] as Route<any, any>);
       const corgiPath = routes.map(r => r.path).join("");
       const OpenAPIPath = this.toOpenAPIPath(corgiPath);
 
@@ -110,56 +88,37 @@ export class OpenAPIGenerator {
           description: endRoute.description,
           operationId: endRoute.operationId,
           parameters:
-            _.flatMap(routes, (route): OpenApi.ParameterObject[] => {
+            routes.flatMap((route): OpenApi.ParameterObject[] => {
               if (route instanceof Namespace) {
                 // Namespace only supports path
-                return _.map(route.params, (schema, name) => {
-                  return {
+                return Object.entries(route.params)
+                  .map(([name, schema]: [string, TStatic]): OpenApi.ParameterObject => ({
                     in: "path",
                     name,
-                    description: schema.describe().description,
-                    schema: {
-                      type: convertJoiToJSONSchema(schema).type,
-                    },
-                    required: true
-                  };
-                });
+                    description: schema.description,
+                    schema,
+                    required: true,
+                  }));
               } else {
-                return _.chain(route.params)
-                  .toPairs()
-                  .filter(r => r[1].in !== "body")
-                  .map(([name, def]) => {
-                    const { description, flags } = def.def.describe();
-
-                    return {
-                      in: def.in as "query",
-                      name,
-                      description,
-                      schema: convertJoiToJSONSchema(def.def),
-                      required: def.in === "path"
-                        || ((flags || {}) as any).presence !== "optional",
-                    };
-                  })
-                  .value();
+                return Object.entries<ParameterDefinition<any>>(route.params)
+                  .filter(([name, param]) => param.in !== "body")
+                  .map(([name, param]): OpenApi.ParameterObject => ({
+                    in: param.in as Exclude<ParameterInputType, "body">,
+                    name,
+                    description: param.def.description,
+                    schema: param.def,
+                    required: param.in === "path" || param.def.modifier !== OptionalModifier,
+                  }));
               }
             }),
           requestBody: (() => {
-            const bodyParams = _.chain(routes)
-              .flatMap((route) => {
-                if (route instanceof Namespace) {
-                  return [];
-                } else {
-                  return _.chain(route.params)
-                    .toPairs()
-                    .filter(r => r[1].in === "body")
-                    .value();
-                }
-              })
-              .map(
-                ([name, paramDef]) =>
-                  ([name, convertJoiToJSONSchema(paramDef.def)])
+            const bodyParams = routes
+              .flatMap((route) => route instanceof Route
+                ? Object.entries<ParameterDefinition<any>>(route.params)
+                    .filter(([name, param]: [string, ParameterDefinition<any>]) => param.in === "body")
+                : []
               )
-              .value();
+              .map(([name, param]) => [name, param.def]);
 
             if (bodyParams.length > 0) {
               return {
@@ -169,11 +128,11 @@ export class OpenAPIGenerator {
                   "application/json": {
                     schema: {
                       type: "object" as const,
-                      properties: _.fromPairs(bodyParams),
-                      required: bodyParams.map(pair => pair[0]),
-                    }
-                  }
-                }
+                      properties: Object.fromEntries(bodyParams),
+                      required: bodyParams.map(([name]) => name),
+                    },
+                  },
+                },
               };
             } else {
               return undefined;
@@ -225,6 +184,6 @@ export class OpenAPIGenerator {
   }
 
   public toOpenAPIPath(path: string) {
-    return path.replace(/\:(\w+)/g, "{$1}");
+    return path.replace(/:(\w+)/g, "{$1}");
   }
 }
