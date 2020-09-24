@@ -1,5 +1,6 @@
 import { OptionalModifier, TStatic } from "@serverless-seoul/typebox";
 import * as OpenApi from "openapi3-ts";
+import * as traverse from "traverse";
 
 import * as LambdaProxy from "../lambda-proxy";
 
@@ -8,6 +9,8 @@ import { ParameterDefinition, ParameterInputType } from "../parameter";
 import { JSONSchema, Route} from "../route";
 
 import { flattenRoutes } from "../router";
+
+const dotPath = (paths: string[]): string => paths.join(".");
 
 export type OpenAPIRouteOptions = (
   // OpenAPI.Info &
@@ -62,6 +65,7 @@ export class OpenAPIGenerator {
     request: LambdaProxy.Event,
     cascadedRoutes: Routes
   ) {
+    const schemas: OpenApi.SchemasObject = info.definitions || {};
     const paths: OpenApi.PathsObject = {};
 
     flattenRoutes(cascadedRoutes).forEach((routes) => {
@@ -96,7 +100,7 @@ export class OpenAPIGenerator {
                     in: "path",
                     name,
                     description: schema.description,
-                    schema,
+                    schema: this.replaceReferencedSchemas(schema, schemas),
                     required: true,
                   }));
               } else {
@@ -106,7 +110,7 @@ export class OpenAPIGenerator {
                     in: param.in as Exclude<ParameterInputType, "body">,
                     name,
                     description: param.def.description,
-                    schema: param.def,
+                    schema: this.replaceReferencedSchemas(param.def, schemas),
                     required: param.in === "path" || param.def.modifier !== OptionalModifier,
                   }));
               }
@@ -118,7 +122,7 @@ export class OpenAPIGenerator {
                     .filter(([name, param]: [string, ParameterDefinition<any>]) => param.in === "body")
                 : []
               )
-              .map(([name, param]) => [name, param.def]);
+              .map(([name, param]) => [name, this.replaceReferencedSchemas(param.def, schemas)] as const);
 
             if (bodyParams.length > 0) {
               return {
@@ -177,7 +181,7 @@ export class OpenAPIGenerator {
       tags: [],
       paths,
       components: {
-        schemas: info.definitions,
+        schemas: this.mergeSchemas(schemas),
       },
     };
     return spec;
@@ -185,5 +189,65 @@ export class OpenAPIGenerator {
 
   public toOpenAPIPath(path: string) {
     return path.replace(/:(\w+)/g, "{$1}");
+  }
+
+  private mergeSchemas(schemas: OpenApi.SchemasObject): OpenApi.SchemasObject {
+    const lookupTable = new Map<any, string>(
+      Object.entries(schemas).map(([key, value]) => [value, key]),
+    );
+
+    const tree = traverse(schemas);
+
+    const references = tree.reduce(function(hash, node) {
+      if (typeof node === "object") {
+        const referencedSchema = lookupTable.get(node);
+        if (referencedSchema && this.level > 1) {
+          const path = dotPath(this.path);
+          hash[path] = referencedSchema;
+        }
+      }
+
+      return hash;
+    }, {} as { [path: string]: string });
+
+    return tree.map(function() {
+      const path = dotPath(this.path);
+      const referencedSchema = references[path];
+      if (referencedSchema) {
+        this.update({
+          $ref: `#/components/schemas/${referencedSchema}`,
+        }, true);
+      }
+    });
+  }
+
+  private replaceReferencedSchemas(target: TStatic, schemas: OpenApi.SchemasObject): OpenApi.SchemaObject {
+    const lookupTable = new Map<any, string>(
+      Object.entries(schemas).map(([key, value]) => [value, key]),
+    );
+
+    const tree = traverse(target);
+
+    const references = tree.reduce(function(hash, node) {
+      if (typeof node === "object") {
+        const referencedSchema = lookupTable.get(node);
+        if (referencedSchema) {
+          const path = dotPath(this.path);
+          hash[path] = referencedSchema;
+        }
+      }
+
+      return hash;
+    }, {} as { [path: string]: string });
+
+    return tree.map(function() {
+      const path = dotPath(this.path);
+      const referencedSchema = references[path];
+      if (referencedSchema) {
+        this.update({
+          $ref: `#/components/schemas/${referencedSchema}`,
+        }, true);
+      }
+    });
   }
 }
