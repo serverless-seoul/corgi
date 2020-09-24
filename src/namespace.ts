@@ -1,4 +1,4 @@
-import { TStatic } from "@catchfashion/typebox";
+import { TStatic } from "@serverless-seoul/typebox";
 import { Response } from "./lambda-proxy";
 import { Route } from "./route";
 import { RoutingContext } from "./routing-context";

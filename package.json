@@ -48,7 +48,7 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
-    "@catchfashion/typebox": "^1.0.1",
+    "@serverless-seoul/typebox": "^1.0.3",
     "@types/aws-lambda": "^8.10.62",
     "@types/lodash": "^4.14.161",
     "@types/node": "^12.12.62",

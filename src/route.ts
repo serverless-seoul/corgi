@@ -1,4 +1,4 @@
-import { TStatic } from "@catchfashion/typebox";
+import { TStatic } from "@serverless-seoul/typebox";
 import * as _ from "lodash";
 
 import * as LambdaProxy from "./lambda-proxy";
