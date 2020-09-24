@@ -1,4 +1,4 @@
-import { Static, TStatic, Type } from "@serverless-seoul/typebox";
+import { Static, TOptional, TStatic, Type } from "@serverless-seoul/typebox";
 import * as Ajv from "ajv";
 import * as _ from "lodash";
 import * as qs from "qs";
@@ -14,6 +14,14 @@ const ajv = new Ajv({
   coerceTypes: true,
   removeAdditional: "all",
 });
+
+type NamespaceParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
+  ? {}
+  : { [P in keyof T]: Static<T[P]> };
+
+type RouteParameterType<T extends { [P in keyof T]: ParameterDefinition<any> }> = string extends keyof T
+  ? {}
+  : { [P in keyof T]: T[P] extends TOptional<any> ? Static<T[P]["def"]> : Static<T[P]> };
 
 // ---- RoutingContext
 export class RoutingContext<
@@ -56,8 +64,12 @@ export class RoutingContext<
     }
   }
   private readonly validatedParams:
-    (string extends keyof U ? {} : { [P in keyof U]: Static<U[P]> }) &
-    (string extends keyof T ? {} : { [P in keyof T]: Static<T[P]["def"]> }) &
+    // Inferred Namespace Parameter
+    NamespaceParameterType<U> &
+    // Inferred Route Parameter
+    RouteParameterType<T> &
+    // Unknown keys should be unknown type
+    // Below type is just for assigning custom parameter in Namespace#before
     { [key: string]: unknown };
   private normalizedHeaders: { [key: string]: string } | null;
 
