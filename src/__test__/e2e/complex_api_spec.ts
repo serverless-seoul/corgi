@@ -1,21 +1,21 @@
+import { Type } from "@catchfashion/typebox";
 import { expect } from "chai";
 
-import * as Joi from "joi";
 import {
   Namespace,
   Parameter,
   Route,
   Router,
   Routes,
+  ValidationError,
 } from "../../index";
 
 describe("Calling complex API", () => {
   it("should exist", async () => {
     const routes: Routes = [
       new Namespace("/api/:userId", {
-        params: {
-          userId: Joi.number()
-        },
+        userId: Type.Number(),
+      }, {
         children: [
           new Route({
             path: "/followers",
@@ -28,21 +28,19 @@ describe("Calling complex API", () => {
               });
             }}
           ),
-          new Namespace("/followings", {
+          new Namespace("/followings", {}, {
             async before() {
               //
             },
             children: [
               Route.POST("", { operationId: "follow" }, {
-                testId: Parameter.Query(Joi.number()),
-                update: Parameter.Body(
-                  Joi.object({
-                    fieldA: Joi.number()
-                  })
-                )
+                testId: Parameter.Query(Type.Number()),
+                update: Parameter.Body(Type.Object({
+                  fieldA: Type.Number(),
+                })),
               }, async function() {
-                const userId = this.params.userId as number;
-                const testId = this.params.testId as number;
+                const userId = this.params.userId;
+                const testId = this.params.testId;
 
                 return this.json({
                   testId,
@@ -52,10 +50,10 @@ describe("Calling complex API", () => {
               }),
 
               Route.PATCH("", { operationId: "patchFollow" }, {
-                testId: Parameter.Query(Joi.number()),
+                testId: Parameter.Query(Type.Number()),
               }, async function() {
-                const userId = this.params.userId as number;
-                const testId = this.params.testId as number;
+                const userId = this.params.userId;
+                const testId = this.params.testId;
 
                 return this.json({
                   testId,
@@ -64,7 +62,7 @@ describe("Calling complex API", () => {
               }),
 
               Route.DELETE("", { operationId: "unfollow" }, {}, async function() {
-                const userId = this.params.userId as number;
+                const userId = this.params.userId;
                 return this.json({ userId });
               }),
             ]
@@ -98,7 +96,6 @@ describe("Calling complex API", () => {
         }
       })
     });
-
     expect(await router.resolve({
       path: "/api/33/followings",
       httpMethod: "PATCH",
@@ -119,18 +116,16 @@ describe("Calling complex API", () => {
     const befores: any[] = [];
     const routes: Routes = [
       new Namespace("/a/:a", {
-        params: {
-          a: Joi.number()
-        },
+        a: Type.Number(),
+      }, {
         async before() {
           befores.push({ a: this.params.a });
           this.params.foo = { a: this.params.a };
         },
         children: [
           new Namespace("/b/:b", {
-            params: {
-              b: Joi.number(),
-            },
+            b: Type.Number(),
+          }, {
             async before() {
               befores.push({ a: this.params.a, b: this.params.b });
               this.params.bar = { a: this.params.a, b: this.params.b };
@@ -177,13 +172,12 @@ describe("Calling complex API", () => {
 describe("Global Error Handling", () => {
   it("should fail, and handled by parent namespace error handler", async () => {
     const routes: Routes = [
-      new Namespace("/api", {
+      new Namespace("/api", {}, {
         async exceptionHandler(error: any) {
-          if (error.name === "ValidationError") {
-            const validationError = error as Joi.ValidationError;
+          if (error instanceof ValidationError) {
             return this.json(
               {
-                errors: validationError.details.map(e => e.message),
+                errors: error.details.map(e => e.message),
               },
               422
             );
@@ -191,13 +185,15 @@ describe("Global Error Handling", () => {
         },
         children: [
           new Namespace("/users/:userId", {
+            userId: Type.Number(),
+          }, {
             children: [
               Route.GET("", { operationId: "getUser" }, {
-                testId: Parameter.Query(Joi.number()),
-                otherError: Parameter.Query(Joi.number()),
+                testId: Parameter.Query(Type.Number()),
+                otherError: Parameter.Query(Type.Number()),
               }, async function() {
-                const userId = this.params.userId as number;
-                const testId = this.params.testId as number;
+                const userId = this.params.userId;
+                const testId = this.params.testId;
                 return this.json({
                   testId,
                   userId,
@@ -220,7 +216,12 @@ describe("Global Error Handling", () => {
     expect(res).to.deep.eq({
       statusCode: 422,
       headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({ errors: [ '"testId" is required', '"otherError" is required' ] }),
+      body: JSON.stringify({
+        errors: [
+          "should have required property 'testId'",
+          "should have required property 'otherError'",
+        ],
+      }),
     });
   });
 });

@@ -1,7 +1,6 @@
 import { expect } from "chai";
 
 import { Route } from "../route";
-import { RoutingContext } from "../routing-context";
 
 describe("Route", () => {
   describe("#constructor", () => {
@@ -12,7 +11,7 @@ describe("Route", () => {
           method: "GET",
           operationId: "getFollowers",
           desc: "List of users that following me",
-          async handler(this: RoutingContext) {
+          async handler() {
             return this.json({
               data: {}
             });
@@ -39,7 +38,7 @@ describe("Route", () => {
           metadata: new Map([
             [A, { x: 200 }],
           ]),
-          async handler(this: RoutingContext) {
+          async handler() {
             return this.json({
               data: {}
             });

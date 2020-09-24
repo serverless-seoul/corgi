@@ -1,3 +1,4 @@
+import { Type } from "@catchfashion/typebox";
 import { expect } from "chai";
 
 import {
@@ -5,7 +6,6 @@ import {
   Route,
   Router,
   Routes,
-  RoutingContext,
 } from "../../index";
 
 import {
@@ -14,8 +14,6 @@ import {
 } from "../index";
 
 import * as LambdaProxy from "../../lambda-proxy";
-
-import * as Joi from "joi";
 
 describe("OpenAPIRoute", () => {
   const definitions = {
@@ -89,23 +87,26 @@ describe("OpenAPIRoute", () => {
 
   const actionRoutes: Routes = [
     Route.POST("/api", { desc: "a", operationId: "createUser" }, {
-      userId: Parameter.Path(Joi.number().integer()),
-      testerId: Parameter.Query(Joi.number().required()),
-      userIds: Parameter.Query(Joi.array().items(Joi.number())),
-      user: Parameter.Body(Joi.object({
-        name: Joi.string().required(),
-        tags: Joi.array().items(Joi.object({
-          name: Joi.string()
-        }), Joi.string()),
-        test: Joi.object(),
-      }))
-    }, async function(this: RoutingContext) {
+      userId: Parameter.Path(Type.Integer()),
+      testerId: Parameter.Query(Type.Number()),
+      userIds: Parameter.Query(Type.Array(Type.Number())),
+      user: Parameter.Body(Type.Object({
+        name: Type.String(),
+        tags: Type.Array(Type.Union([
+          Type.Object({
+            name: Type.String()
+          }),
+          Type.String(),
+        ])),
+        test: Type.Object({}),
+      })),
+    }, async function() {
       return this.json({});
     }),
-    Route.POST("/api/a", { desc: "a", operationId: "GetAPIa" }, {}, async function(this: RoutingContext) {
+    Route.POST("/api/a", { desc: "a", operationId: "GetAPIa" }, {}, async function() {
       return this.json({});
     }),
-    Route.GET("/api/c", { desc: "a", operationId: "GetApiC" }, {}, async function(this: RoutingContext) {
+    Route.GET("/api/c", { desc: "a", operationId: "GetApiC" }, {}, async function() {
       return this.json({});
     }),
     Route.GET(
@@ -121,7 +122,7 @@ describe("OpenAPIRoute", () => {
         }
       },
       {},
-      async function(this: RoutingContext) {
+      async function() {
         return this.json({
           data: [{
             id: 100,
@@ -144,7 +145,7 @@ describe("OpenAPIRoute", () => {
         }
       },
       {},
-      async function(this: RoutingContext) {
+      async function() {
         return this.json({
           data: [{
             id: 100,

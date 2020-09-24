@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es2019",
     "noImplicitAny": true,
     "sourceMap": true,
+    "rootDir": "src",
     "outDir": "dst",
     "strict": false,
     "strictNullChecks": true,
@@ -11,8 +12,7 @@
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
     "lib": [
-      "es2017",
-      "esnext.asynciterable"
+      "es2019"
     ]
   },
   "exclude": [

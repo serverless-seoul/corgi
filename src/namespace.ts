@@ -1,36 +1,38 @@
-import * as Joi from "joi";
+import { TStatic } from "@catchfashion/typebox";
 import { Response } from "./lambda-proxy";
 import { Route } from "./route";
 import { RoutingContext } from "./routing-context";
 
+type MergeParams<T, U> = string extends keyof U ? T : T & U;
+
 // ---- Namespace
-export class Namespace {
+export class Namespace<
+  T extends { [P in keyof T]: TStatic },
+  U extends { [P in keyof U]: TStatic } = { [key: string]: TStatic }
+> {
   constructor(
     public readonly path: string,
-    private options: NamespaceOptions
+    public readonly params: T,
+    public readonly options: {
+      before?: (this: RoutingContext<any, MergeParams<T, U>>) => Promise<void>;
+      exceptionHandler?: ExceptionHandler<Partial<MergeParams<T, U>>>;
+      /**
+       * All the params are from 'PATH'. namespace currently won't support query param validation or access
+       */
+      children: Routes<MergeParams<T, U>>;
+    }
   ) {
     if (options.children.length === 0) {
-      throw new Error("Namespace must have childrens");
+      throw new Error("Namespace must have children");
     }
   }
 
   get before() { return this.options.before; }
   get children() { return this.options.children; }
-  get params() { return this.options.params; }
   get exceptionHandler() { return this.options.exceptionHandler; }
 }
 
 // if it's void, it's failed to handler error
-export type ExceptionHandler = (this: RoutingContext, error: Error) => Promise<Response | void>;
+export type ExceptionHandler<T> = (this: RoutingContext<any, T>, error: Error) => Promise<Response | void>;
 
-export interface NamespaceOptions {
-  before?: (this: RoutingContext) => Promise<void>;
-  exceptionHandler?: ExceptionHandler;
-  /**
-   * All the params are from 'PATH'. namespace currently won't support query param validation or access
-   */
-  params?: { [name: string]: Joi.Schema };
-  children: Routes;
-}
-
-export type Routes = Array<Namespace | Route>;
+export type Routes<T = any> = Array<Namespace<any, T> | Route<any, T>>;
