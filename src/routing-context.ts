@@ -1,4 +1,4 @@
-import { Static, TStatic, Type } from "@catchfashion/typebox";
+import { Static, TStatic, Type } from "@serverless-seoul/typebox";
 import * as Ajv from "ajv";
 import * as _ from "lodash";
 import * as qs from "qs";

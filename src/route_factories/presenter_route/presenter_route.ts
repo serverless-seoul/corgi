@@ -1,4 +1,4 @@
-import { TStatic } from "@catchfashion/typebox";
+import { TStatic } from "@serverless-seoul/typebox";
 import {
   ParameterDefinition,
 } from "../../parameter";

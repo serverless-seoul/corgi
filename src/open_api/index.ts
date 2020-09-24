@@ -1,4 +1,4 @@
-import { OptionalModifier, TStatic } from "@catchfashion/typebox";
+import { OptionalModifier, TStatic } from "@serverless-seoul/typebox";
 import * as OpenApi from "openapi3-ts";
 
 import * as LambdaProxy from "../lambda-proxy";

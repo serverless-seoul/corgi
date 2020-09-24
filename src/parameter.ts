@@ -1,4 +1,4 @@
-import { TStatic } from "@catchfashion/typebox";
+import { TStatic } from "@serverless-seoul/typebox";
 
 export type ParameterInputType = "query" | "header" | "path" | "body";
 export interface ParameterDefinition<T extends TStatic> {
