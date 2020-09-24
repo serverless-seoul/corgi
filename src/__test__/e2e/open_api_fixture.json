@@ -1,0 +1,360 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MyAPI",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.net/prod/"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/me": {
+      "get": {
+        "description": "Describe current user",
+        "operationId": "describeMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserShow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "description": "List Messages",
+        "operationId": "listMessages",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "count",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new Message",
+        "operationId": "createMessage",
+        "parameters": [],
+        "requestBody": {
+          "description": "Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                },
+                "required": [
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageShow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "description": "Describe given message",
+        "operationId": "describeMessage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageShow"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update given message",
+        "operationId": "updateMessage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                },
+                "required": [
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageShow"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete given message",
+        "operationId": "deleteMessage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Succeeded"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "status": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "active"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "deleted"
+                ]
+              }
+            ]
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "content": {
+            "type": "string"
+          },
+          "readonly": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "user",
+          "content"
+        ]
+      },
+      "MessageShow": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Message"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MessageList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "paging": {
+            "type": "object",
+            "properties": {
+              "after": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "data",
+          "paging"
+        ]
+      },
+      "Succeeded": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean",
+                "enum": [
+                  true
+                ]
+              }
+            },
+            "required": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "username"
+        ]
+      },
+      "UserShow": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UserList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "paging": {
+            "type": "object",
+            "properties": {
+              "after": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "data",
+          "paging"
+        ]
+      }
+    }
+  }
+}
