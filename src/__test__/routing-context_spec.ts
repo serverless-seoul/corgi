@@ -206,11 +206,7 @@ describe("RoutingContext", () => {
           ),
         });
 
-        expect(context.params).to.deep.eq({
-          // update: {
-          //   complex: null,
-          // },
-        });
+        expect(context.params).to.deep.eq({});
       });
     });
   });

@@ -35,6 +35,7 @@ describe("Calling complex API", () => {
             children: [
               Route.POST("", { operationId: "follow" }, {
                 testId: Parameter.Query(Type.Number()),
+                optional: Parameter.Query(Type.Optional(Type.String())),
                 update: Parameter.Body(Type.Object({
                   fieldA: Type.Number(),
                 })),
@@ -44,6 +45,7 @@ describe("Calling complex API", () => {
 
                 return this.json({
                   testId,
+                  optional: this.params.optional,
                   userId,
                   update: this.params.update,
                 });
