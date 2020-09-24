@@ -15,7 +15,7 @@ export type PresenterRouteHandler<
   Input,
   T extends { [P in keyof T]: ParameterDefinition<any> },
   U extends { [P in keyof U]: TStatic }
-> = (this: RoutingContext<T, U>) => Promise<Input>;
+> = unknown extends Input ? never : (this: RoutingContext<T, U>) => Promise<Input>;
 
 export class PresenterRouteFactory {
   public static create<
@@ -45,7 +45,7 @@ export class PresenterRouteFactory {
       metadata: options.metadata,
       params,
       async handler() {
-        const res = (await (handler.call(this) as Promise<Entity>));
+        const res = await handler.call(this);
         return this.json(await presenter.present(res));
       },
     });

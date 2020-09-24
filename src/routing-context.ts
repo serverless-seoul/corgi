@@ -1,4 +1,4 @@
-import { Static, TOptional, TStatic, Type } from "@serverless-seoul/typebox";
+import { Static, TObject, TStatic, Type } from "@serverless-seoul/typebox";
 import * as Ajv from "ajv";
 import * as _ from "lodash";
 import * as qs from "qs";
@@ -15,17 +15,17 @@ const ajv = new Ajv({
   removeAdditional: "all",
 });
 
-type NamespaceParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
+type ParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
   ? {}
-  : { [P in keyof T]: Static<T[P]> };
+  : Static<TObject<T>>;
 
-type RouteParameterType<T extends { [P in keyof T]: ParameterDefinition<any> }> = string extends keyof T
-  ? {}
-  : { [P in keyof T]: T[P] extends TOptional<any> ? Static<T[P]["def"]> : Static<T[P]> };
+type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TStatic> }> = {
+  [P in keyof T]: T[P]["def"];
+};
 
 // ---- RoutingContext
 export class RoutingContext<
-  T extends { [P in keyof T]: ParameterDefinition<any> },
+  T extends { [P in keyof T]: ParameterDefinition<TStatic> },
   U extends { [P in keyof U]: TStatic } = {}
 > {
 
@@ -65,9 +65,9 @@ export class RoutingContext<
   }
   private readonly validatedParams:
     // Inferred Namespace Parameter
-    NamespaceParameterType<U> &
+    ParameterType<U> &
     // Inferred Route Parameter
-    RouteParameterType<T> &
+    ParameterType<ExtractParameter<T>> &
     // Unknown keys should be unknown type
     // Below type is just for assigning custom parameter in Namespace#before
     { [key: string]: unknown };
