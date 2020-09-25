@@ -1,3 +1,10 @@
+# [4.0.0-beta.2](https://github.com/serverless-seoul/corgi/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2020-09-25)
+
+
+### Bug Fixes
+
+* **parameter:** stripping out unknown parameter should work with oneOf (union) type ([7f6a5d9](https://github.com/serverless-seoul/corgi/commit/7f6a5d95df1950bb6573d49079fa4d7f3b1ca1f7))
+
 # [4.0.0-beta.1](https://github.com/serverless-seoul/corgi/compare/v3.2.1-beta.1...v4.0.0-beta.1) (2020-09-25)
 
 
