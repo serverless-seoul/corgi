@@ -1,3 +1,22 @@
+# [4.0.0-beta.1](https://github.com/serverless-seoul/corgi/compare/v3.2.1-beta.1...v4.0.0-beta.1) (2020-09-25)
+
+
+### Bug Fixes
+
+* **typing:** use more strict types ([51aebb6](https://github.com/serverless-seoul/corgi/commit/51aebb6cd6d9a2809914e68e52a9729b4c056f8b))
+* add missing optional parameter type inference ([96714b5](https://github.com/serverless-seoul/corgi/commit/96714b58252d492ec0706efb35e56c73beb67cca))
+
+
+### Features
+
+* **openapi:** add schema reference merging ([f817e42](https://github.com/serverless-seoul/corgi/commit/f817e42ddec4f54628b04f62c139b4b62ad39c8d))
+* support automatic parameter type inference by using typebox ([598ad14](https://github.com/serverless-seoul/corgi/commit/598ad1475dcf382841b4f97189dc9b4b0a14ee7b))
+
+
+### BREAKING CHANGES
+
+* This change requires TypeScript 4 and Node.js 12
+
 ## [3.2.1-beta.1](https://github.com/serverless-seoul/corgi/compare/v3.2.0...v3.2.1-beta.1) (2020-09-25)
 
 
