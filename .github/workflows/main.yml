@@ -14,7 +14,7 @@ jobs:
       - name: Test
         run: npm test
       - name: Publish
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
         # npm will not execute `prepublisnOnly` lifecycle hook if user is root.
         # @see https://github.com/semantic-release/semantic-release/issues/956#issuecomment-431097773
         run: |
