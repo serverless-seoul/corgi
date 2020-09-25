@@ -11,7 +11,7 @@
   ],
   "tags": [],
   "paths": {
-    "/me": {
+    "/api/me": {
       "get": {
         "description": "Describe current user",
         "operationId": "describeMe",
@@ -30,7 +30,7 @@
         }
       }
     },
-    "/messages": {
+    "/api/messages": {
       "get": {
         "description": "List Messages",
         "operationId": "listMessages",
@@ -104,7 +104,7 @@
         }
       }
     },
-    "/messages/{id}": {
+    "/api/messages/{id}": {
       "get": {
         "description": "Describe given message",
         "operationId": "describeMessage",

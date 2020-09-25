@@ -2,7 +2,7 @@ import { Namespace, PresenterRouteFactory } from "../../../../index";
 import * as Fixtures from "../fixtures";
 import * as Presenters from "../presenters";
 
-export const route = new Namespace("/me", {}, {
+export const route = new Namespace("/api/me", {}, {
   children: [
     PresenterRouteFactory.GET("", {
       operationId: "describeMe",

@@ -6,7 +6,7 @@ import * as Models from "../models";
 import * as Presenters from "../presenters";
 import * as Schemas from "../schemas";
 
-export const route = new Namespace("/messages", {}, {
+export const route = new Namespace("/api/messages", {}, {
   children: [
     PresenterRouteFactory.GET("", {
       operationId: "listMessages",

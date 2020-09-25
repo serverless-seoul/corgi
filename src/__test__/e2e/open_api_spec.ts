@@ -14,9 +14,9 @@ describe("OpenAPI E2E Test", () => {
 
   beforeEach(() => {
     router = new Router([
-      new Namespace("/api", {}, {
+      new Namespace("", {}, {
         children: [
-          new OpenAPIRoute("/open-api", {
+          new OpenAPIRoute("/api/open-api", {
             title: "MyAPI",
             version: "1.0.0",
             definitions: Schemas,
