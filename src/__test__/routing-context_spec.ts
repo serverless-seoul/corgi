@@ -18,8 +18,10 @@ describe("RoutingContext", () => {
               fieldB: 54321,
               fieldC: {
                 c: 100,
-              }
-            }
+              },
+              fieldUnknown: false,
+            },
+            unknownBodyParam: "foo",
           }),
           queryStringParameters: {
             "testId": "12345",
@@ -29,6 +31,7 @@ describe("RoutingContext", () => {
             "arrayParameter[1]": "2",
             "arrayParameter[2]": "3",
             "arrayParameter[3]": "4",
+            "unknownQueryParam": "aaa",
           }
         } as any, "request-id", {
           userId: "33",

@@ -1,19 +1,12 @@
 import { Static, TObject, TStatic, Type } from "@serverless-seoul/typebox";
-import * as Ajv from "ajv";
 import * as _ from "lodash";
 import * as qs from "qs";
 import { ValidationError } from "./errors";
 import * as LambdaProxy from "./lambda-proxy";
 
+import { ajv } from "./ajv";
 import { ParameterDefinition, ParameterInputType } from "./parameter";
 import { Router } from "./router";
-
-const ajv = new Ajv({
-  allErrors: true,
-  async: false,
-  coerceTypes: true,
-  removeAdditional: "all",
-});
 
 type ParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
   ? {}
