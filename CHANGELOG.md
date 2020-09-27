@@ -24,7 +24,7 @@
 
 * This change requires TypeScript 4 and Node.js 12
 
-## [3.2.1-beta.1](https://github.com/serverless-seoul/corgi/compare/v3.2.0...v3.2.1-beta.1) (2020-09-25)
+## [3.2.1](https://github.com/serverless-seoul/corgi/compare/v3.2.0...v3.2.1) (2020-09-25)
 
 
 ### Bug Fixes
