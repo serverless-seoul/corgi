@@ -1,24 +1,20 @@
-import * as Joi from "joi";
+import { TStatic } from "@serverless-seoul/typebox";
 
-export type ParameterInputType = "query" | "header" | "path" | "formData" | "body";
-export interface ParameterDefinition {
+export type ParameterInputType = "query" | "header" | "path" | "body";
+export interface ParameterDefinition<T extends TStatic> {
   in: ParameterInputType;
-  def: Joi.Schema;
+  def: T;
 }
-export interface ParameterDefinitionMap {
-  [key: string]: ParameterDefinition;
-}
-
 export class Parameter {
-  public static Query(schema: Joi.Schema): ParameterDefinition {
+  public static Query<T extends TStatic>(schema: T): ParameterDefinition<T> {
     return { in: "query", def: schema };
   }
 
-  public static Path(schema: Joi.Schema): ParameterDefinition {
+  public static Path<T extends TStatic>(schema: T): ParameterDefinition<T> {
     return { in: "path", def: schema };
   }
 
-  public static Body(schema: Joi.Schema): ParameterDefinition {
+  public static Body<T extends TStatic>(schema: T): ParameterDefinition<T> {
     return { in: "body", def: schema };
   }
 }

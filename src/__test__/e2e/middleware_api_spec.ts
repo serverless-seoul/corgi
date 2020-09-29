@@ -1,6 +1,6 @@
+import { Type } from "@serverless-seoul/typebox";
 import { expect } from "chai";
 
-import * as Joi from "joi";
 import {
   Middleware,
   MiddlewareAfterOptions,
@@ -15,9 +15,8 @@ describe("Calling complex middleware connected API", () => {
     const router = new Router(
       [
         new Namespace("/api/:userId", {
-          params: {
-            userId: Joi.number()
-          },
+          userId: Type.Number(),
+        }, {
           async exceptionHandler(error: Error) {
             // 2
             return this.json(

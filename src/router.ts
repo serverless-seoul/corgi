@@ -5,7 +5,6 @@ import { TimeoutError } from ".";
 import * as LambdaProxy from "./lambda-proxy";
 import { Middleware, MiddlewareConstructor } from "./middleware";
 import { Namespace, Routes } from "./namespace";
-import { ParameterInputType } from "./parameter";
 import { RootNamespace } from "./root-namespace";
 import { Route } from "./route";
 import { RoutingContext } from "./routing-context";
@@ -13,14 +12,10 @@ import { RoutingContext } from "./routing-context";
 // ---- Router
 
 export function flattenRoutes(routes: Routes) {
-  let flattenedRoutes: Routes[] = [];
-  routes.forEach(route => {
-    flattenedRoutes = [...flattenedRoutes, ...flattenRoute([], route)];
-  });
-  return flattenedRoutes;
+  return routes.flatMap((route) => flattenRoute([], route));
 }
 
-export function flattenRoute(parents: Array<Route | Namespace>, route: Route | Namespace): Routes[] {
+export function flattenRoute(parents: Routes, route: Route<any, any> | Namespace<any, any>): Routes[] {
   if (route instanceof Route) {
     return [
       [
@@ -29,24 +24,16 @@ export function flattenRoute(parents: Array<Route | Namespace>, route: Route | N
       ]
     ];
   } else {
-    let routes: Routes[] = [];
-
-    route.children.forEach((childRoute) => {
-      const childRoutes = flattenRoute([...parents, route], childRoute);
-      routes = [
-        ...routes,
-        ...childRoutes,
-      ];
-    });
-
-    return routes;
+    return route
+      .children
+      .flatMap((childRoute) => flattenRoute([...parents, route], childRoute));
   }
 }
 
 export class Router {
   private flattenRoutes: Routes[];
   // operationId - Route Map
-  private operations: Map<string, Route>;
+  private operations: Map<string, Route<any, any>>;
   private middlewares: Middleware[];
   private middlewareMap = new Map<MiddlewareConstructor<any>, Middleware>();
   private routeTimeout: number | undefined;
@@ -59,10 +46,10 @@ export class Router {
 
     this.operations = new Map(
       _.chain(this.flattenRoutes)
-        .map(routesList => _.last(routesList) as Route)
+        .map(routesList => _.last(routesList) as Route<any, any>)
         .filter(operation => !!operation.operationId)
         .groupBy(operation => operation.operationId)
-        .mapValues((operations: Route[], operationId: string) => {
+        .mapValues((operations: Array<Route<any, any>>, operationId: string) => {
           if (operations.length > 1) {
             throw new Error(`${operations.length} Routes has duplicated operationId: "${operationId}"`);
           }
@@ -110,13 +97,13 @@ export class Router {
   }
 
   // tslint:disable-next-line:member-ordering
-  private readonly routeToPathRegexpCache = new Map<Route, { regexp: RegExp, keys: PathKey[] }>();
+  private readonly routeToPathRegexpCache = new Map<Route<any, any>, { regexp: RegExp, keys: PathKey[] }>();
 
   public async resolve(
     event: LambdaProxy.Event, options: { timeout: number, requestId?: string }
   ): Promise<LambdaProxy.Response> {
     for (const routesList of this.flattenRoutes) {
-      const endRoute = (routesList[routesList.length - 1] as Route);
+      const endRoute = (routesList[routesList.length - 1] as Route<any, any>);
       const method = endRoute.method;
 
       // Matching Route
@@ -144,7 +131,7 @@ export class Router {
 
           const routingContext = new RoutingContext(this, event, options.requestId, pathParams);
 
-          const prevRoutes: Namespace[] = [];
+          const prevRoutes: Array<Namespace<any, any>> = [];
           for (const currentRoute of routesList) {
             if (currentRoute instanceof Namespace) {
               prevRoutes.splice(0, 0, currentRoute);
@@ -197,9 +184,9 @@ export class Router {
   }
 
   private async runRoute(
-    routingContext: RoutingContext,
-    namespaces: Namespace[],
-    route: Route,
+    routingContext: RoutingContext<any, any>,
+    namespaces: Array<Namespace<any, any>>,
+    route: Route<any, any>,
     timeout: number
   ) {
     try {
@@ -209,7 +196,7 @@ export class Router {
         // Parameter Validation
         const params = _.mapValues(namespace.params, (schema, name) => {
           return {
-            in: "path" as ParameterInputType,
+            in: "path" as const,
             def: schema,
           };
         });

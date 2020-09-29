@@ -7,7 +7,7 @@ describe("Namespace", () => {
   describe("#constructor", () => {
     it("should construct object with given options", () => {
       const namespace  =
-        new Namespace("/api", {
+        new Namespace("/api", {}, {
           children: [
             Route.GET("/test", { operationId: "test" }, {}, async function() {
               return this.json({});
@@ -21,7 +21,7 @@ describe("Namespace", () => {
 
     it("should raise error when there is no child", () => {
       expect(function() {
-        return new Namespace("/api", { children: [] });
+        return new Namespace("/api", {}, { children: [] });
       }).to.throw(Error);
     });
   });

@@ -1,20 +1,26 @@
-import * as Joi from "joi";
+import { Static, TObject, TStatic, Type } from "@serverless-seoul/typebox";
 import * as _ from "lodash";
 import * as qs from "qs";
+import { ValidationError } from "./errors";
 import * as LambdaProxy from "./lambda-proxy";
 
-import { ParameterDefinitionMap } from "./parameter";
+import { ajv } from "./ajv";
+import { ParameterDefinition, ParameterInputType } from "./parameter";
 import { Router } from "./router";
 
-//
-const DefaultJoiValidateOptions: Joi.ValidationOptions = {
-  stripUnknown: true,
-  presence: "required",
-  abortEarly: false,
+type ParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
+  ? {}
+  : Static<TObject<T>>;
+
+type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TStatic> }> = {
+  [P in keyof T]: T[P]["def"];
 };
 
 // ---- RoutingContext
-export class RoutingContext {
+export class RoutingContext<
+  T extends { [P in keyof T]: ParameterDefinition<TStatic> },
+  U extends { [P in keyof U]: TStatic } = {}
+> {
 
   get headers(): LambdaProxy.Event["headers"] {
     // normalize works lazily and should be cached for further use
@@ -50,7 +56,14 @@ export class RoutingContext {
       }
     }
   }
-  private validatedParams: { [key: string]: any };
+  private readonly validatedParams:
+    // Inferred Namespace Parameter
+    ParameterType<U> &
+    // Inferred Route Parameter
+    ParameterType<ExtractParameter<T>> &
+    // Unknown keys should be unknown type
+    // Below type is just for assigning custom parameter in Namespace#before
+    { [key: string]: unknown };
   private normalizedHeaders: { [key: string]: string } | null;
 
   constructor(
@@ -59,35 +72,32 @@ export class RoutingContext {
     public readonly requestId: string | undefined,
     private pathParams: { [key: string]: string }
   ) {
-    this.validatedParams = {};
+    this.validatedParams = {} as any;
     this.normalizedHeaders = null;
   }
 
-  public validateAndUpdateParams(parameterDefinitionMap: ParameterDefinitionMap) {
-    const groupByIn: {
-      [key: string]: { [key: string]: Joi.Schema }
-    } = {};
+  public validateAndUpdateParams(parameterDefinitionMap: { [key: string]: ParameterDefinition<any> }) {
+    const groupByIn = Object.entries(parameterDefinitionMap).reduce((hash, [name, schema]) => {
+      hash[schema.in] ||= {};
+      hash[schema.in]![name] = schema.def;
 
-    _.forEach(parameterDefinitionMap, (schema, name) => {
-      if (!groupByIn[schema.in]) {
-        groupByIn[schema.in] = {};
-      }
-
-      groupByIn[schema.in][name] = schema.def;
+      return hash;
+    }, {} as {
+      [k in ParameterInputType]?: {
+        [key: string]: ParameterDefinition<any>;
+      };
     });
 
-    const validate = (rawParams: any, schemaMap: { [key: string]: Joi.Schema }) => {
-      const res = Joi.validate(
-        rawParams || {},
-        Joi.object(schemaMap),
-        DefaultJoiValidateOptions,
-      );
+    const validate = (rawParams: any, schemaMap: { [key: string]: TStatic }) => {
+      const params = _.cloneDeep(rawParams ?? {});
+      const valid = ajv.validate(Type.Object(schemaMap), params);
 
-      if (res.error) {
-        throw res.error;
-      } else {
-        Object.assign(this.validatedParams, res.value);
+      if (!valid) {
+        const errors = ajv.errors!;
+        throw new ValidationError(ajv.errorsText(errors), errors);
       }
+
+      Object.assign(this.validatedParams, params);
     };
 
     if (groupByIn.path) {

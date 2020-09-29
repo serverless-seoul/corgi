@@ -1,21 +1,7 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2017",
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "outDir": "dst",
-    "strict": false,
-    "strictNullChecks": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noUnusedLocals": true,
-    "lib": [
-      "es2017",
-      "esnext.asynciterable"
-    ]
+    "resolveJsonModule": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": []
 }
