@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/serverless-seoul/corgi/compare/v4.0.1...v4.1.0) (2020-11-04)
+
+
+### Features
+
+* **typebox:** apply typebox changes ([afa64fa](https://github.com/serverless-seoul/corgi/commit/afa64fa5f9596e3982a80714f11eb4e9bf4a8446))
+
 ## [4.0.1](https://github.com/serverless-seoul/corgi/compare/v4.0.0...v4.0.1) (2020-11-04)
 
 
