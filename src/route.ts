@@ -1,4 +1,4 @@
-import { TStatic } from "@serverless-seoul/typebox";
+import { TSchema } from "@serverless-seoul/typebox";
 import * as _ from "lodash";
 
 import * as LambdaProxy from "./lambda-proxy";
@@ -10,56 +10,56 @@ import { Middleware, MiddlewareConstructor } from "./middleware";
 export type HttpMethod = "GET" | "PUT" | "POST" | "PATCH" | "DELETE" | "OPTIONS" | "HEAD";
 export type RouteHandler<
   T extends { [P in keyof T]: ParameterDefinition<any> },
-  U extends { [P in keyof U]: TStatic }
+  U extends { [P in keyof U]: TSchema }
 > = (this: RoutingContext<T, U>) => Promise<LambdaProxy.Response>;
 export type RouteMetadata = Map<Function, any>; // tslint:disable-line
 
 // ---- Route
 export class Route<
   T extends { [P in keyof T]: ParameterDefinition<any> },
-  U extends { [P in keyof U]: TStatic }
+  U extends { [P in keyof U]: TSchema }
 > {
 
   // Simplified Constructors
   public static GET<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory<T, U>(path, "GET", options, params, handler);
   }
   public static PUT<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "PUT", options, params, handler);
   }
   public static POST<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "POST", options, params, handler);
   }
   public static PATCH<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "PATCH", options, params, handler);
   }
   public static DELETE<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "DELETE", options, params, handler);
   }
   public static OPTIONS<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "OPTIONS", options, params, handler);
   }
   public static HEAD<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "HEAD", options, params, handler);
   }
@@ -67,7 +67,7 @@ export class Route<
 
   private static _factory<
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(
     path: string,
     method: HttpMethod,
@@ -123,7 +123,7 @@ export interface RouteSimplifiedOptions {
 
 export interface RouteOptions<
   T extends { [P in keyof T]: ParameterDefinition<any> },
-  U extends { [P in keyof U]: TStatic }
+  U extends { [P in keyof U]: TSchema }
 > {
   path: string;
   method: HttpMethod;

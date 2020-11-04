@@ -1,4 +1,4 @@
-import { TStatic } from "@serverless-seoul/typebox";
+import { TSchema } from "@serverless-seoul/typebox";
 import { Response } from "./lambda-proxy";
 import { Route } from "./route";
 import { RoutingContext } from "./routing-context";
@@ -7,15 +7,15 @@ type MergeParams<T, U> = string extends keyof U ? T : T & U;
 
 // ---- Namespace
 export class Namespace<
-  T extends { [P in keyof T]: TStatic },
-  U extends { [P in keyof U]: TStatic } = { [key: string]: TStatic }
+  T extends { [key: string]: TSchema },
+  U extends { [key: string]: TSchema } = { [key: string]: TSchema }
 > {
   constructor(
     public readonly path: string,
     public readonly params: T,
     public readonly options: {
       before?: (this: RoutingContext<any, MergeParams<T, U>>) => Promise<void>;
-      exceptionHandler?: ExceptionHandler<Partial<MergeParams<T, U>>>;
+      exceptionHandler?: ExceptionHandler<MergeParams<T, U>>;
       /**
        * All the params are from 'PATH'. namespace currently won't support query param validation or access
        */
@@ -33,6 +33,7 @@ export class Namespace<
 }
 
 // if it's void, it's failed to handler error
-export type ExceptionHandler<T> = (this: RoutingContext<any, T>, error: Error) => Promise<Response | void>;
+export type ExceptionHandler<T extends { [key: string]: TSchema }> =
+  (this: RoutingContext<any, any>, error: Error) => Promise<Response | void>;
 
-export type Routes<T = any> = Array<Namespace<any, T> | Route<any, T>>;
+export type Routes<T extends { [key: string]: TSchema } = any> = Array<Namespace<any, T> | Route<any, T>>;

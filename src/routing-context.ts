@@ -1,4 +1,4 @@
-import { Static, TObject, TStatic, Type } from "@serverless-seoul/typebox";
+import { Static, TObject, TSchema, Type } from "@serverless-seoul/typebox";
 import * as _ from "lodash";
 import * as qs from "qs";
 import { ValidationError } from "./errors";
@@ -8,18 +8,18 @@ import { ajv } from "./ajv";
 import { ParameterDefinition, ParameterInputType } from "./parameter";
 import { Router } from "./router";
 
-type ParameterType<T extends { [P in keyof T]: TStatic }> = string extends keyof T
+type ParameterType<T extends { [P in keyof T]: TSchema }> = string extends keyof T
   ? {}
   : Static<TObject<T>>;
 
-type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TStatic> }> = {
+type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TSchema> }> = {
   [P in keyof T]: T[P]["def"];
 };
 
 // ---- RoutingContext
 export class RoutingContext<
-  T extends { [P in keyof T]: ParameterDefinition<TStatic> },
-  U extends { [P in keyof U]: TStatic } = {}
+  T extends { [P in keyof T]: ParameterDefinition<TSchema> },
+  U extends { [P in keyof U]: TSchema } = {}
 > {
 
   get headers(): LambdaProxy.Event["headers"] {
@@ -84,11 +84,11 @@ export class RoutingContext<
       return hash;
     }, {} as {
       [k in ParameterInputType]?: {
-        [key: string]: ParameterDefinition<any>;
+        [key: string]: TSchema;
       };
     });
 
-    const validate = (rawParams: any, schemaMap: { [key: string]: TStatic }) => {
+    const validate = (rawParams: any, schemaMap: { [key: string]: TSchema }) => {
       const params = _.cloneDeep(rawParams ?? {});
       const valid = ajv.validate(Type.Object(schemaMap), params);
 

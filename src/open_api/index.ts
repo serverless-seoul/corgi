@@ -1,4 +1,4 @@
-import { OptionalModifier, TStatic } from "@serverless-seoul/typebox";
+import { OptionalModifier, TSchema } from "@serverless-seoul/typebox";
 import * as OpenApi from "openapi3-ts";
 import * as traverse from "traverse";
 
@@ -96,7 +96,7 @@ export class OpenAPIGenerator {
               if (route instanceof Namespace) {
                 // Namespace only supports path
                 return Object.entries(route.params)
-                  .map(([name, schema]: [string, TStatic]): OpenApi.ParameterObject => ({
+                  .map(([name, schema]: [string, TSchema]): OpenApi.ParameterObject => ({
                     in: "path",
                     name,
                     description: schema.description,
@@ -221,7 +221,7 @@ export class OpenAPIGenerator {
     });
   }
 
-  private replaceReferencedSchemas(target: TStatic, schemas: OpenApi.SchemasObject): OpenApi.SchemaObject {
+  private replaceReferencedSchemas(target: TSchema, schemas: OpenApi.SchemasObject): OpenApi.SchemaObject {
     const lookupTable = new Map<any, string>(
       Object.entries(schemas).map(([key, value]) => [value, key]),
     );

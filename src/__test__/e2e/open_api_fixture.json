@@ -213,7 +213,7 @@
             "type": "integer"
           },
           "status": {
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "enum": [

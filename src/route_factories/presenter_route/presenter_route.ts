@@ -1,4 +1,4 @@
-import { TStatic } from "@serverless-seoul/typebox";
+import { TSchema } from "@serverless-seoul/typebox";
 import {
   ParameterDefinition,
 } from "../../parameter";
@@ -14,7 +14,7 @@ import { Presenter } from "./presenter";
 export type PresenterRouteHandler<
   Input,
   T extends { [P in keyof T]: ParameterDefinition<any> },
-  U extends { [P in keyof U]: TStatic }
+  U extends { [P in keyof U]: TSchema }
 > = unknown extends Input ? never : (this: RoutingContext<T, U>) => Promise<Input>;
 
 export class PresenterRouteFactory {
@@ -22,7 +22,7 @@ export class PresenterRouteFactory {
     Entity,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(
     path: string,
     method: HttpMethod,
@@ -57,7 +57,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "GET", options, params, presenter, handler);
   }
@@ -65,7 +65,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "POST", options, params, presenter, handler);
   }
@@ -73,7 +73,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "PUT", options, params, presenter, handler);
   }
@@ -81,7 +81,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "PATCH", options, params, presenter, handler);
   }
@@ -89,7 +89,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "DELETE", options, params, presenter, handler);
   }
@@ -97,7 +97,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "OPTIONS", options, params, presenter, handler);
   }
@@ -105,7 +105,7 @@ export class PresenterRouteFactory {
     Input,
     Output,
     T extends { [P in keyof T]: ParameterDefinition<any> },
-    U extends { [P in keyof U]: TStatic }
+    U extends { [P in keyof U]: TSchema }
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "HEAD", options, params, presenter, handler);
   }
