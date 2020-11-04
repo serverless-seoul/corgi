@@ -11,26 +11,42 @@ function usePatchedAjv() {
     removeAdditional: "all",
   });
 
-  ajvInstance.removeKeyword("oneOf");
-  ajvInstance.addKeyword("oneOf", {
-    compile: (schemas) => (data) => {
-      for (const schema of schemas) {
-        const validator = ajv.compile(schema);
-        const valid = validator(_.cloneDeep(data));
+  // Patch oneOf / anyOf keywords to support `removeAdditional` behavior like Joi
+  ["oneOf", "anyOf"].forEach((keyword) => {
+    ajvInstance.removeKeyword(keyword);
+    ajvInstance.addKeyword(keyword, {
+      compile: (schemas) => (data) => {
+        for (const schema of schemas) {
+          const validator = ajv.compile(schema);
+          const valid = validator(_.cloneDeep(data));
 
-        if (valid) {
-          validator(data);
-          return valid;
+          if (valid) {
+            validator(data);
+            return valid;
+          }
         }
-      }
-      return false;
+        return false;
+      },
+      modifying: true,
+      metaSchema: {
+        type: "array",
+        items: [{ type: "object" }],
+      },
+      errors: false,
+    });
+  });
+
+  // Patch allOf keywords to support `removeAdditional` behavior like Joi
+  ajvInstance.removeKeyword("allOf");
+  ajvInstance.addKeyword("allOf", {
+    macro: (schema) => {
+      return _.merge({}, ...schema);
     },
-    modifying: true,
     metaSchema: {
       type: "array",
       items: [{ type: "object" }],
     },
-    errors: false,
+    errors: true,
   });
 
   return ajvInstance;
