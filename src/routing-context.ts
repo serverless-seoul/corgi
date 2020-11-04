@@ -106,7 +106,11 @@ export class RoutingContext<
     if (groupByIn.query) {
       // API Gateway only support string parsing.
       // but with this, now it would support Array<String> / Map<String, String> parsing too
-      const queryStringParameters = qs.parse(qs.stringify(this.request.queryStringParameters));
+      const queryStringParameters = _.mapValues(
+        qs.parse(qs.stringify(this.request.queryStringParameters)),
+        (value) => this.castJSON(value),
+      );
+
       validate(queryStringParameters, groupByIn.query);
     }
     if (groupByIn.body) {
@@ -128,6 +132,14 @@ export class RoutingContext<
       },
       body: JSON.stringify(json),
     };
+  }
+
+  private castJSON(value: any) {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      return value;
+    }
   }
 
   private decodeURI(object: { [key: string]: any }) {

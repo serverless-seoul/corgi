@@ -67,7 +67,55 @@ describe("Calling complex API", () => {
                 const userId = this.params.userId;
                 return this.json({ userId });
               }),
-            ]
+
+              new Namespace("/nested-namespace/:location", {
+                location: Type.Union([
+                  Type.Literal("path"),
+                  Type.Literal("query"),
+                ]),
+              }, {
+                children: [
+                  Route.GET("", { operationId: "complex" }, {
+                    a: Parameter.Query(Type.Array(Type.Integer())),
+                    b: Parameter.Query(Type.Object({
+                      foo: Type.String(),
+                      bar: Type.Integer(),
+                    })),
+                    c: Parameter.Query(Type.Union([
+                      Type.Object({
+                        type: Type.Literal("foo"),
+                        foo: Type.String(),
+                      }),
+                      Type.Object({
+                        type: Type.Literal("bar"),
+                        bar: Type.Integer(),
+                      }),
+                      Type.Object({
+                        type: Type.Literal("baz"),
+                        baz: Type.Boolean(),
+                      }),
+                    ])),
+                    d: Parameter.Query(Type.Intersect([
+                      Type.Object({
+                        required: Type.String(),
+                      }),
+                      Type.Object({
+                        optional: Type.Optional(Type.Number()),
+                      }),
+                    ])),
+                  }, async function() {
+                    return this.json({
+                      userId: this.params.userId,
+                      location: this.params.location,
+                      a: this.params.a,
+                      b: this.params.b,
+                      c: this.params.c,
+                      d: this.params.d,
+                    });
+                  }),
+                ],
+              }),
+            ],
           })
         ]
       })
@@ -108,7 +156,47 @@ describe("Calling complex API", () => {
       body: JSON.stringify({
         testId: 12345,
         userId: 33,
-      })
+      }),
+    });
+
+    expect(await router.resolve({
+      path: "/api/33/followings/nested-namespace/query",
+      httpMethod: "GET",
+      queryStringParameters: {
+        a: JSON.stringify([1, 2, 3]),
+        b: JSON.stringify({
+          foo: "abc",
+          bar: 123,
+        }),
+        c: JSON.stringify({
+          type: "baz",
+          baz: true,
+        }),
+        d: JSON.stringify({
+          required: "yes",
+          optional: 3,
+        }),
+      },
+    } as any, { timeout: 10000 })).to.deep.eq({
+      statusCode: 200,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        userId: 33,
+        location: "query",
+        a: [1, 2, 3],
+        b: {
+          foo: "abc",
+          bar: 123,
+        },
+        c: {
+          type: "baz",
+          baz: true,
+        },
+        d: {
+          required: "yes",
+          optional: 3,
+        },
+      }),
     });
   });
 });
