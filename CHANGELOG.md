@@ -1,3 +1,11 @@
+## [4.0.1](https://github.com/serverless-seoul/corgi/compare/v4.0.0...v4.0.1) (2020-11-04)
+
+
+### Bug Fixes
+
+* **parameter:** add missing allOf macro ([7310131](https://github.com/serverless-seoul/corgi/commit/73101311956cddd2138ad54d2089bea241cc9b50))
+* **parameter:** cast query parameter as object to support object schema type ([e1f43e5](https://github.com/serverless-seoul/corgi/commit/e1f43e5bb20c0d2c46bc246909dd47528470d6dd))
+
 # [4.0.0](https://github.com/serverless-seoul/corgi/compare/v3.2.1...v4.0.0) (2020-09-29)
 
 
