@@ -212,6 +212,40 @@ describe("RoutingContext", () => {
         expect(context.params).to.deep.eq({});
       });
     });
+
+    context("when parameter type validation fails", () => {
+      it("should throw error with invalid data", () => {
+        const context = new RoutingContext({} as any, {
+          path: "/api/33/followings/%ED%94%BD%EC%8B%9C",
+          httpMethod: "POST",
+          body: JSON.stringify({
+            update: {
+              invalid: "data",
+            },
+          }),
+          queryStringParameters: null,
+        } as any, "request-id", {});
+
+        let error: Error | null = null;
+        try {
+          context.validateAndUpdateParams({
+            update: Parameter.Body(
+              Type.Array(Type.Object({
+                complex: Type.Union([
+                  Type.Array(Type.Number()),
+                  Type.Null(),
+                ]),
+              })),
+            ),
+          });
+        } catch (e) {
+          error = e;
+        }
+
+        expect(error!.toString())
+          .to.be.eq(`ValidationError: data.update should be array - rawParams: {"update":{"invalid":"data"}}`);
+      });
+    });
   });
 
   describe("#normalizeHeaders", () => {

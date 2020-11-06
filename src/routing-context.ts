@@ -94,7 +94,7 @@ export class RoutingContext<
 
       if (!valid) {
         const errors = ajv.errors!;
-        throw new ValidationError(ajv.errorsText(errors), errors);
+        throw new ValidationError(`${ajv.errorsText(errors)} - rawParams: ${JSON.stringify(rawParams)}`, errors);
       }
 
       Object.assign(this.validatedParams, params);
