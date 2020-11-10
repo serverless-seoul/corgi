@@ -32,6 +32,21 @@ describe("RoutingContext", () => {
             "arrayParameter[2]": "3",
             "arrayParameter[3]": "4",
             "unknownQueryParam": "aaa",
+            "queryString": JSON.stringify({ foo: 123 }),
+            "queryObject": JSON.stringify({ foo: "a", bar: 1 }),
+            "queryUnion": JSON.stringify({ type: "bar", bar: 3 }),
+            "queryArray": JSON.stringify([{
+              a: "aaa",
+              b: 1,
+              c: true,
+              d: null,
+              e: "e",
+            }, {
+              a: "aaa",
+              b: 1,
+              c: true,
+              d: null,
+            }]),
           }
         } as any, "request-id", {
           userId: "33",
@@ -41,6 +56,29 @@ describe("RoutingContext", () => {
         context.validateAndUpdateParams({
           testId: Parameter.Query(Type.Number()),
           encodedParam: Parameter.Query(Type.String()),
+          queryString: Parameter.Query(Type.String()),
+          queryObject: Parameter.Query(Type.Object({
+            foo: Type.String(),
+            bar: Type.Integer(),
+            baz: Type.Optional(Type.Boolean()),
+          })),
+          queryUnion: Parameter.Query(Type.Union([
+            Type.Object({
+              type: Type.Literal("foo"),
+              foo: Type.String(),
+            }),
+            Type.Object({
+              type: Type.Literal("bar"),
+              bar: Type.Number(),
+            }),
+          ])),
+          queryArray: Parameter.Query(Type.Array(Type.Object({
+            a: Type.String(),
+            b: Type.Integer(),
+            c: Type.Boolean(),
+            d: Type.Null(),
+            e: Type.Optional(Type.Literal("e")),
+          }))),
           update: Parameter.Body(Type.Object({
             fieldA: Type.Number(),
             fieldC: Type.Object({
@@ -64,6 +102,21 @@ describe("RoutingContext", () => {
           userId: 33,
           interest: "픽시",
           arrayParameter: [1, 2, 3, 4],
+          queryString: JSON.stringify({ foo: 123 }),
+          queryObject: { foo: "a", bar: 1 },
+          queryUnion: { type: "bar", bar: 3 },
+          queryArray: [{
+            a: "aaa",
+            b: 1,
+            c: true,
+            d: null,
+            e: "e",
+          }, {
+            a: "aaa",
+            b: 1,
+            c: true,
+            d: null,
+          }],
         });
       });
 
