@@ -106,12 +106,57 @@ export class RoutingContext<
     if (groupByIn.query) {
       // API Gateway only support string parsing.
       // but with this, now it would support Array<String> / Map<String, String> parsing too
-      const queryStringParameters = _.mapValues(
-        qs.parse(qs.stringify(this.request.queryStringParameters)),
-        (value) => this.castJSON(value),
-      );
+      const queryStringParameters = qs.parse(qs.stringify(this.request.queryStringParameters));
 
-      validate(queryStringParameters, groupByIn.query);
+      // AJV does not support non-scalar type coercion (e.g. String <-> Object)
+      // Due to this limitation, we have to iterate each schemas, try validate with manual type casting
+      const errors = Object.entries(groupByIn.query).reduce((collection, [key, schema]) => {
+        // Perform first validation using raw value
+        let caught: ValidationError | null = null;
+
+        try {
+          validate({
+            [key]: queryStringParameters[key],
+          }, {
+            [key]: schema,
+          });
+        } catch (e) {
+          caught = e;
+        }
+
+        // If validation was failed, perform manual type casting and perform validation again
+        if (caught) {
+          const raw = queryStringParameters[key];
+          const casted = this.castJSON(raw);
+
+          // If cast was failed, throw captured error
+          if (raw === casted) {
+            collection.push(caught);
+            return collection;
+          }
+
+          try {
+            validate({
+              [key]: casted,
+            }, {
+              [key]: schema,
+            });
+          } catch (e) {
+            collection.push(e);
+            return collection;
+          }
+        }
+
+        return collection;
+      }, [] as ValidationError[]);
+
+      // Build Aggregated ValidationError if needed
+      if (errors.length > 0) {
+        throw new ValidationError(
+          errors.map((error) => error.message).join(", "),
+          errors.flatMap((error) => error.details),
+        );
+      }
     }
     if (groupByIn.body) {
       validate(this.bodyJSON, groupByIn.body);
