@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/serverless-seoul/corgi/compare/v4.1.0...v4.1.1) (2020-11-11)
+
+
+### Bug Fixes
+
+* **parameter:** make object type coercion to last resort to respect its schema ([3974639](https://github.com/serverless-seoul/corgi/commit/3974639bf0552908072d74305a9ec77ada8a8a31))
+
 # [4.1.0](https://github.com/serverless-seoul/corgi/compare/v4.0.1...v4.1.0) (2020-11-04)
 
 
