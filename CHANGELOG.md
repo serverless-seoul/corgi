@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/serverless-seoul/corgi/compare/v4.1.1...v4.1.2) (2020-11-12)
+
+
+### Bug Fixes
+
+* **package:** republish ([4eb5803](https://github.com/serverless-seoul/corgi/commit/4eb5803254bb53109e3d8fff5875ce92b84776c6))
+
 ## [4.1.1](https://github.com/serverless-seoul/corgi/compare/v4.1.0...v4.1.1) (2020-11-11)
 
 
