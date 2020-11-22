@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/serverless-seoul/corgi/compare/v4.1.2...v4.1.3) (2020-11-22)
+
+
+### Bug Fixes
+
+* **openapi:** add missing optional body parameter support ([d7df907](https://github.com/serverless-seoul/corgi/commit/d7df907f409983a7194000e90a95d33685b62c79))
+
 ## [4.1.2](https://github.com/serverless-seoul/corgi/compare/v4.1.1...v4.1.2) (2020-11-12)
 
 
