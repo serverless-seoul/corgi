@@ -28,6 +28,11 @@ export const route = new Namespace("/api/messages", {}, {
       desc: "Create a new Message",
     }, {
       message: Parameter.Body(Schemas.Message),
+      attachments: Parameter.Body(Type.Optional(Type.Array(Type.Object({
+        name: Type.String(),
+        size: Type.Integer(),
+        type: Type.Optional(Type.String()),
+      })))),
     }, Presenters.MessageShow, async function() {
       return this.params.message;
     }),

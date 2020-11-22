@@ -81,6 +81,24 @@
                 "properties": {
                   "message": {
                     "$ref": "#/components/schemas/Message"
+                  },
+                  "attachments": {
+                    "items": {
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "integer"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "size"],
+                      "type": "object"
+                    },
+                    "type": "array"
                   }
                 },
                 "required": [

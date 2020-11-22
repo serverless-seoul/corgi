@@ -121,8 +121,7 @@ export class OpenAPIGenerator {
                 ? Object.entries<ParameterDefinition<any>>(route.params)
                     .filter(([name, param]: [string, ParameterDefinition<any>]) => param.in === "body")
                 : []
-              )
-              .map(([name, param]) => [name, this.replaceReferencedSchemas(param.def, schemas)] as const);
+              );
 
             if (bodyParams.length > 0) {
               return {
@@ -132,8 +131,19 @@ export class OpenAPIGenerator {
                   "application/json": {
                     schema: {
                       type: "object" as const,
-                      properties: Object.fromEntries(bodyParams),
-                      required: bodyParams.map(([name]) => name),
+                      properties: Object.fromEntries(
+                        bodyParams.map(([name, param]) => [
+                          name,
+                          this.replaceReferencedSchemas(param.def, schemas),
+                        ] as const),
+                      ),
+                      required: bodyParams.reduce((collection, [name, param]) => {
+                        if (param.def.modifier !== OptionalModifier) {
+                          collection.push(name);
+                        }
+
+                        return collection;
+                      }, [] as string[]),
                     },
                   },
                 },
