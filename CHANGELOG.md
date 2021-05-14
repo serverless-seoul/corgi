@@ -1,3 +1,15 @@
+# [4.2.0](https://github.com/serverless-seoul/corgi/compare/v4.1.3...v4.2.0) (2021-05-14)
+
+
+### Bug Fixes
+
+* fix broken build ([34c86b6](https://github.com/serverless-seoul/corgi/commit/34c86b68c69892f56e661f894bf0bcfd1a410429))
+
+
+### Features
+
+* **builtins:** expose error message of StandardError ([6f3d6f2](https://github.com/serverless-seoul/corgi/commit/6f3d6f26d8d4e7a4474ddcb34c92d8a3956ab151))
+
 ## [4.1.3](https://github.com/serverless-seoul/corgi/compare/v4.1.2...v4.1.3) (2020-11-22)
 
 
