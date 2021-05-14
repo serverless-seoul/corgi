@@ -1,21 +1,30 @@
-[![Travis Build Status](https://travis-ci.org/serverless-seoul/corgi.svg?branch=master)](https://travis-ci.org/serverless-seoul/corgi)
-[![npm version](https://badge.fury.io/js/vingle-corgi.svg)](https://badge.fury.io/js/vingle-corgi)
+[![workflow](https://github.com/serverless-seoul/corgi/actions/workflows/main.yml/badge.svg)](https://github.com/serverless-seoul/corgi/actions/workflows/main.yml)
+[![npm version](https://badge.fury.io/js/%40serverless-seoul%2Fcorgi.svg)](https://badge.fury.io/js/%40serverless-seoul%2Fcorgi)
 
 # Corgi
 [Grape](https://github.com/ruby-grape/grape) like lightweight HTTP API Framework for AWS Lambda  
 This is hard fork of [vingle-corgi](https://github.com/serverless-seoul/corgi) for stable maintenance purpose  
 
 ## Example
+
+### Parameter Validation & Type Inference
+
+![demo](https://user-images.githubusercontent.com/2101743/94349498-c754c480-007f-11eb-9774-c2d9696c727d.gif)
+
 ```typescript
+import { Namespace, Router, ValidationError } from "@serverless-seoul/corgi";
+import { Type } from "@serverless-seoul/typebox";
+
 const router = new Router([
   new Namespace('/api/:userId', {
     params: {
-      userId: Joi.number(),
+      userId: Type.Number(),
     },
     async before() {
+      const { userId } = this.params; // type of `userId` will be `number` (inferred using parameter definition!)
       this.params.user = await User.findByUserId(this.params.userId);
       if (!this.params.user) {
-        this.json({
+        return this.json({
           error: "User not exists!",
         }, 404);
         // You can also just throw error - which goes to exceptionHandler
@@ -23,11 +32,10 @@ const router = new Router([
     },
     async exceptionHandler(error) {
       // Global Exception Handling.
-      if (error.name === 'ValidationError') {
-        const validationError = error as Joi.ValidationError;
+      if (error instanceof ValidationError) {
         return this.json(
           {
-            errors: validationError.details.map(e => e.message),
+            errors: error.details.map(e => e.message),
           },
           422
         );

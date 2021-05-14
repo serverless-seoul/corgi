@@ -11,9 +11,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
-    "lib": [
-      "es2019"
-    ]
   },
   "exclude": [
     "**/__test__/"

@@ -10,7 +10,8 @@
         "trailing-comma": [false],
         "arrow-parens": false,
         "only-arrow-functions": false,
-        "max-classes-per-file": false
+        "max-classes-per-file": false,
+        "array-type": [true, "array-simple"]
     },
     "rulesDirectory": []
 }

@@ -25,15 +25,19 @@ export class OpenAPIRoute extends Namespace<any, any> {
     routes: Routes
   ) {
 
-    const CorsHeaders = function(origin: string) {
-      return {
-        "Access-Control-Allow-Origin": origin || "",
-        "Access-Control-Allow-Headers": [
-          "Content-Type",
-        ].join(", "),
-        "Access-Control-Allow-Methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"].join(", "),
-        "Access-Control-Max-Age": `${60 * 60 * 24 * 30}`,
-      };
+    const CorsHeaders = function(origin?: string): Record<string, string> {
+      if (origin) {
+        return {
+          "Access-Control-Allow-Origin": origin || "",
+          "Access-Control-Allow-Headers": [
+            "Content-Type",
+          ].join(", "),
+          "Access-Control-Allow-Methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"].join(", "),
+          "Access-Control-Max-Age": `${60 * 60 * 24 * 30}`,
+        };
+      } else {
+        return {};
+      }
     };
 
     super(path, {}, {
