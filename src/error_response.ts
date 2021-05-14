@@ -1,4 +1,6 @@
 export class StandardError extends Error {
+  public readonly name = "StandardError";
+
   constructor(
     public readonly statusCode: number,
     public readonly options: {
@@ -7,7 +9,7 @@ export class StandardError extends Error {
       metadata?: object,
     }
   ) {
-    super();
+    super(options.message);
   }
 }
 
