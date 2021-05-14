@@ -140,7 +140,7 @@ describe("Router", () => {
           },
           children: [
             Route.GET("", { operationId: "getIndex" }, {}, async function() {
-              await new Promise((resolve, reject) => {
+              await new Promise<void>((resolve, reject) => {
                 setTimeout(() => {
                   resolve();
                 }, 200);
