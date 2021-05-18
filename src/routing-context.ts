@@ -107,6 +107,7 @@ export class RoutingContext<
       // API Gateway only support string parsing.
       // but with this, now it would support Array<String> / Map<String, String> parsing too
       const queryStringParameters = qs.parse(qs.stringify(this.request.queryStringParameters));
+      const multiValueQueryStringParameters = qs.parse(qs.stringify(this.request.multiValueQueryStringParameters));
 
       // AJV does not support non-scalar type coercion (e.g. String <-> Object)
       // Due to this limitation, we have to iterate each schemas, try validate with manual type casting
@@ -116,7 +117,7 @@ export class RoutingContext<
 
         try {
           validate({
-            [key]: queryStringParameters[key],
+            [key]: multiValueQueryStringParameters[key] ?? queryStringParameters[key],
           }, {
             [key]: schema,
           });

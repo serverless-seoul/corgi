@@ -120,6 +120,27 @@ describe("RoutingContext", () => {
         });
       });
 
+      it("should parse and validate multiple value parameters in querystring", () => {
+        const context = new RoutingContext({} as any, {
+          path: "/api",
+          httpMethod: "GET",
+          queryStringParameters: {
+            "a": ["2"],
+          },
+          multiValueQueryStringParameters: {
+            "a": ["1", "2"],
+          }
+        } as any, "request-id", {});
+
+        context.validateAndUpdateParams({
+          a: Parameter.Query(Type.Array(Type.String())),
+        });
+
+        expect(context.params).to.deep.eq({
+          a: ["1", "2"],
+        });
+      });
+
       it("should parse and validate application/x-www-form-urlencoded params", () => {
         const context = new RoutingContext({} as any, {
           path: "/api/33/followings/%ED%94%BD%EC%8B%9C",
