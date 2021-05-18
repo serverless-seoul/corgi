@@ -27,10 +27,7 @@ describe("RoutingContext", () => {
             "testId": "12345",
             "not_allowed_param": "xxx",
             "encodedParam": "픽시",
-            "arrayParameter[0]": "1",
-            "arrayParameter[1]": "2",
-            "arrayParameter[2]": "3",
-            "arrayParameter[3]": "4",
+            "arrayParameter[]": "4",
             "unknownQueryParam": "aaa",
             "queryString": JSON.stringify({ foo: 123 }),
             "queryObject": JSON.stringify({ foo: "a", bar: 1 }),
@@ -47,6 +44,8 @@ describe("RoutingContext", () => {
               c: true,
               d: null,
             }]),
+          }, multiValueQueryStringParameters: {
+            "arrayParameter[]": ["1", "2", "3", "4"]
           }
         } as any, "request-id", {
           userId: "33",
@@ -125,10 +124,12 @@ describe("RoutingContext", () => {
           path: "/api",
           httpMethod: "GET",
           queryStringParameters: {
-            "a": ["2"],
+            "a": "[1, 2]",
           },
           multiValueQueryStringParameters: {
-            "a": ["1", "2"],
+            "a": [
+              "[1, 2]"
+            ],
           }
         } as any, "request-id", {});
 
@@ -161,10 +162,10 @@ describe("RoutingContext", () => {
             "testId": "12345",
             "not_allowed_param": "xxx",
             "encodedParam": "픽시",
-            "arrayParameter[0]": "1",
-            "arrayParameter[1]": "2",
-            "arrayParameter[2]": "3",
-            "arrayParameter[3]": "4",
+            "arrayParameter[]": "4",
+          },
+          multiValueQueryStringParameters: {
+            "arrayParameter[]": ["1", "2", "3", "4"],
           }
         } as any, "request-id", {
             userId: "33",
@@ -218,10 +219,9 @@ describe("RoutingContext", () => {
             "not_allowed_param": "xxx",
             "encodedParam": "100%users",
             "doubleEncodedParam": "vingle%3A%2F%2Finterests%2F%EB%B9%99%EA%B8%80%EB%9F%AC",
-            "arrayParameter[0]": "1",
-            "arrayParameter[1]": "2",
-            "arrayParameter[2]": "3",
-            "arrayParameter[3]": "4",
+            "arrayParameter[]": "4",
+          }, multiValueQueryStringParameters: {
+            "arrayParameter[]": ["1", "2", "3", "4"],
           }
         } as any, "request-id", {
           userId: "33",
