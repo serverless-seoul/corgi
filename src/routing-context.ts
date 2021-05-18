@@ -115,9 +115,21 @@ export class RoutingContext<
         // Perform first validation using raw value
         let caught: ValidationError | null = null;
 
+        const value = schema.type === "array"
+          ? (() => {
+              try {
+                // handle case like ?a=[1,2,3,4]
+                if (JSON.parse(queryStringParameters[key] as any) instanceof Array) {
+                  return queryStringParameters[key];
+                }
+              } catch (e) {}
+              return multiValueQueryStringParameters[key];
+            })()
+          : queryStringParameters[key];
+
         try {
           validate({
-            [key]: multiValueQueryStringParameters[key] ?? queryStringParameters[key],
+            [key]: value,
           }, {
             [key]: schema,
           });
@@ -127,7 +139,7 @@ export class RoutingContext<
 
         // If validation was failed, perform manual type casting and perform validation again
         if (caught) {
-          const raw = queryStringParameters[key];
+          const raw = value;
           const casted = this.castJSON(raw);
 
           // If cast was failed, throw captured error
