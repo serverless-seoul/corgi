@@ -117,12 +117,10 @@ export class RoutingContext<
 
         const value = schema.type === "array"
           ? (() => {
-              try {
-                // handle case like ?a=[1,2,3,4]
-                if (JSON.parse(queryStringParameters[key] as any) instanceof Array) {
-                  return queryStringParameters[key];
-                }
-              } catch (e) {}
+              const casted = this.castJSON(queryStringParameters[key]);
+              if (casted instanceof Array) {
+                return casted;
+              }
               return multiValueQueryStringParameters[key];
             })()
           : queryStringParameters[key];
