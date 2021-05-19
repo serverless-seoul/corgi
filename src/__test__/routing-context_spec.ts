@@ -125,20 +125,44 @@ describe("RoutingContext", () => {
           httpMethod: "GET",
           queryStringParameters: {
             "a": "[1, 2]",
+            "b[0]": "1",
+            "b[1]": "2",
+            "c[]": "2",
+            "d": "2",
           },
           multiValueQueryStringParameters: {
             "a": [
               "[1, 2]"
             ],
+            "b[0]": [
+              "1"
+            ],
+            "b[1]": [
+              "2"
+            ],
+            "c[]": [
+              "1",
+              "2",
+            ],
+            "d": [
+              "1",
+              "2",
+            ]
           }
         } as any, "request-id", {});
 
         context.validateAndUpdateParams({
           a: Parameter.Query(Type.Array(Type.String())),
+          b: Parameter.Query(Type.Array(Type.String())),
+          c: Parameter.Query(Type.Array(Type.String())),
+          d: Parameter.Query(Type.Array(Type.String())),
         });
 
         expect(context.params).to.deep.eq({
           a: ["1", "2"],
+          b: ["1", "2"],
+          c: ["1", "2"],
+          d: ["1", "2"],
         });
       });
 
