@@ -120,6 +120,10 @@ describe("RoutingContext", () => {
       });
 
       it("should parse and validate multiple value parameters in querystring", () => {
+        // ?a=[1,2]
+        // ?b[0]=1&b[1]=2
+        // ?c[]=1&c[]=2
+        // ?d=1&d=2
         const context = new RoutingContext({} as any, {
           path: "/api",
           httpMethod: "GET",
