@@ -1,7 +1,8 @@
 {
   "extends": [
-    "@vingle",
-    "@vingle:nodejs8",
-    "@vingle:lambda"
+    "@prescott",
+    "@prescott:nodejs12",
+    "@prescott:lambda",
+    "@prescott:semantic-commit"
   ]
 }
