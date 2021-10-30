@@ -35,8 +35,8 @@
   },
   "homepage": "https://github.com/serverless-seoul/corgi#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.0",
-    "@semantic-release/git": "10.0.0",
+    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "8.0.1",
     "@types/chai": "4.2.22",
     "@types/lodash": "4.14.176",
