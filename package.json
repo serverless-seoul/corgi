@@ -40,7 +40,7 @@
     "@semantic-release/github": "8.0.2",
     "@types/chai": "4.3.0",
     "@types/lodash": "4.14.178",
-    "@types/mocha": "9.0.0",
+    "@types/mocha": "9.1.0",
     "@types/traverse": "0.6.32",
     "chai": "4.3.4",
     "check-engine": "1.10.1",
