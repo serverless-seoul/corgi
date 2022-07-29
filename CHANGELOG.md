@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/serverless-seoul/corgi/compare/v4.2.0...v4.2.1) (2022-07-29)
+
+
+### Bug Fixes
+
+* **exceptionhandler:** cleanup exception handling typings ([66ed6c6](https://github.com/serverless-seoul/corgi/commit/66ed6c64538f6062fb12200b8902b1044e38a1c8))
+
 # [4.2.0](https://github.com/serverless-seoul/corgi/compare/v4.1.3...v4.2.0) (2021-05-14)
 
 
