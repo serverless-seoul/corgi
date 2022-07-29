@@ -33,7 +33,7 @@ export class Namespace<
 }
 
 // if it's void, it's failed to handler error
-export type ExceptionHandler<T extends { [key: string]: TSchema }> =
-  (this: RoutingContext<any, any>, error: Error) => Promise<Response | void>;
-
-export type Routes<T extends { [key: string]: TSchema } = any> = Array<Namespace<any, T> | Route<any, T>>;
+export type ExceptionHandler<RoutingContextParameters extends { [key: string]: TSchema }>
+  = (this: RoutingContext<any, RoutingContextParameters>, error: Error) => Promise<Response | void>;
+export type Routes<T extends { [key: string]: TSchema } = any>
+  = Array<Namespace<any, T> | Route<any, T>>;
