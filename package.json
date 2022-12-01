@@ -39,7 +39,7 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "8.0.7",
     "@types/chai": "4.3.4",
-    "@types/lodash": "4.14.190",
+    "@types/lodash": "4.14.191",
     "@types/mocha": "10.0.1",
     "@types/traverse": "0.6.32",
     "chai": "4.3.7",
