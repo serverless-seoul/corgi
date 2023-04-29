@@ -38,7 +38,7 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "8.0.7",
-    "@types/chai": "4.3.4",
+    "@types/chai": "4.3.5",
     "@types/lodash": "4.14.194",
     "@types/mocha": "10.0.1",
     "@types/traverse": "0.6.32",
