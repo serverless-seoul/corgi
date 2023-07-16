@@ -37,7 +37,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "9.0.3",
+    "@semantic-release/github": "9.0.4",
     "@types/chai": "4.3.5",
     "@types/lodash": "4.14.195",
     "@types/mocha": "10.0.1",
