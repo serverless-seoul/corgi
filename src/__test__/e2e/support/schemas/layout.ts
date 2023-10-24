@@ -1,4 +1,4 @@
-import { TSchema, Type } from "@serverless-seoul/typebox";
+import { TSchema, Type } from "@sinclair/typebox";
 
 export function DataLayout(schema: TSchema) {
   return Type.Object({

@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 
 import { Namespace, Parameter, PresenterRouteFactory, StandardError } from "../../../../index";
 import * as Fixtures from "../fixtures";

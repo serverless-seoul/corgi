@@ -1,4 +1,4 @@
-import { Static, TObject, TSchema, Type } from "@serverless-seoul/typebox";
+import { Static, TObject, TSchema, Type } from "@sinclair/typebox";
 import * as _ from "lodash";
 import * as qs from "qs";
 import { ValidationError } from "./errors";

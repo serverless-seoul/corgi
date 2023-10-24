@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 import { expect } from "chai";
 
 import * as qs from "qs";

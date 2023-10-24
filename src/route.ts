@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 import * as _ from "lodash";
 
 import * as LambdaProxy from "./lambda-proxy";

@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 import {
   ParameterDefinition,
 } from "../../parameter";

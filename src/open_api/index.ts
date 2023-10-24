@@ -1,4 +1,4 @@
-import { OptionalModifier, TSchema } from "@serverless-seoul/typebox";
+import { Optional, TSchema } from "@sinclair/typebox";
 import * as OpenApi from "openapi3-ts";
 import * as traverse from "traverse";
 
@@ -115,7 +115,7 @@ export class OpenAPIGenerator {
                     name,
                     description: param.def.description,
                     schema: this.replaceReferencedSchemas(param.def, schemas),
-                    required: param.in === "path" || param.def.modifier !== OptionalModifier,
+                    required: param.in === "path" || param.def.modifier !== Optional,
                   }));
               }
             }),
@@ -142,7 +142,7 @@ export class OpenAPIGenerator {
                         ] as const),
                       ),
                       required: bodyParams.reduce((collection, [name, param]) => {
-                        if (param.def.modifier !== OptionalModifier) {
+                        if (param.def.modifier !== Optional) {
                           collection.push(name);
                         }
 

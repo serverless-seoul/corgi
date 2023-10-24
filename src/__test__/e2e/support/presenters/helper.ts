@@ -1,4 +1,4 @@
-import { Static } from "@serverless-seoul/typebox";
+import { Static } from "@sinclair/typebox";
 import { Presenter } from "../../../../index";
 
 import * as Schemas from "../schemas";

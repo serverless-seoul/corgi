@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 import { Response } from "./lambda-proxy";
 import { Route } from "./route";
 import { RoutingContext } from "./routing-context";
