@@ -4,11 +4,11 @@ import {
 } from "./error_response";
 import { Namespace, Routes } from "./namespace";
 
-export class RootNamespace extends Namespace<{}, {}> {
+export class RootNamespace extends Namespace<Record<string, never>, Record<string, never>> {
   public readonly errorFormatter: ErrorResponseFormatter;
 
   constructor(children: Routes) {
-    const errorFormatter = new ErrorResponseFormatter(process.env.CORGI_ERROR_PASSSWORD);
+    const errorFormatter = new ErrorResponseFormatter(process.env.CORGI_ERROR_PASSWORD);
 
     super("", {}, {
       async exceptionHandler(error: Error) {

@@ -9,7 +9,7 @@ import { ParameterDefinition, ParameterInputType } from "./parameter";
 import { Router } from "./router";
 
 type ParameterType<T extends { [P in keyof T]: TSchema }> = string extends keyof T
-  ? {}
+  ? Record<string, any>
   : Static<TObject<T>>;
 
 type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TSchema> }> = {
@@ -19,7 +19,7 @@ type ExtractParameter<T extends { [P in keyof T]: ParameterDefinition<TSchema> }
 // ---- RoutingContext
 export class RoutingContext<
   T extends { [P in keyof T]: ParameterDefinition<TSchema> },
-  U extends { [P in keyof U]: TSchema } = {}
+  U extends { [P in keyof U]: TSchema } = Record<string, any>
 > {
 
   get headers(): LambdaProxy.Event["headers"] {
@@ -188,7 +188,7 @@ export class RoutingContext<
   }
 
   private decodeURI(object: { [key: string]: any }) {
-    return _.mapValues(object, (value, key) => {
+    return _.mapValues(object, (value) => {
       if (typeof value === "string") {
         try {
           return decodeURIComponent(value);
