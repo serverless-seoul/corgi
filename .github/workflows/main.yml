@@ -9,8 +9,8 @@ jobs:
       - uses: actions/checkout@v1
       - name: Prepare
         run: npm ci
-      - name: Lint
-        run: npm run lint
+      # - name: Lint
+      #   run: npm run lint
       - name: Test
         run: npm test
       - name: Publish

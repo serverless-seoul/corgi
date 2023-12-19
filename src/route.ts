@@ -12,7 +12,7 @@ export type RouteHandler<
   T extends { [P in keyof T]: ParameterDefinition<any> },
   U extends { [P in keyof U]: TSchema }
 > = (this: RoutingContext<T, U>) => Promise<LambdaProxy.Response>;
-export type RouteMetadata = Map<Function, any>; // tslint:disable-line
+export type RouteMetadata = Map<Function, any>;
 
 // ---- Route
 export class Route<
@@ -63,7 +63,6 @@ export class Route<
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "HEAD", options, params, handler);
   }
-  // tslint:enable:max-line-length
 
   private static _factory<
     T extends { [P in keyof T]: ParameterDefinition<any> },

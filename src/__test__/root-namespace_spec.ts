@@ -41,7 +41,6 @@ describe("RootNamespace", () => {
           expect(decrypted.name).to.be.eq("Error");
 
           expect(decrypted.stack[0]).to.be.eq("Error: TEST ERROR");
-          // tslint:disable
           // Since Stack keep changes depends on CI env, check only the first line
           // "    at RoutingContext.<anonymous> (/Users/lea/Works/corgi/dst/__test__/root-namespace_spec.js:26:35)",
           // "    at Generator.next (<anonymous>)",
@@ -64,9 +63,7 @@ describe("RootNamespace", () => {
           // "    at /Users/lea/Works/corgi/node_modules/async-listener/glue.js:188:31",
           // "    at <anonymous>",
           // "    at process._tickCallback (internal/process/next_tick.js:188:7)",
-          // tslint:enable
           expect(res.statusCode).to.be.eq(500);
-
         });
       });
 

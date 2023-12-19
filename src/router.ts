@@ -96,7 +96,6 @@ export class Router {
     };
   }
 
-  // tslint:disable-next-line:member-ordering
   private readonly routeToPathRegexpCache = new Map<Route<any, any>, { regexp: RegExp, keys: PathKey[] }>();
 
   public async resolve(
