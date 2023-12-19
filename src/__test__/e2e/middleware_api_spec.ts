@@ -35,10 +35,10 @@ describe("Calling complex middleware connected API", () => {
               async handler() {
                 // 1
                 throw new Error(`Error: ${this.params.userId}`);
-              }
+              },
             }),
-          ]
-        })
+          ],
+        }),
       ], {
         middlewares: [
           new (class TestMiddleware extends Middleware<void> {
@@ -52,20 +52,20 @@ describe("Calling complex middleware connected API", () => {
               }
               return options.response;
             }
-          })()
-        ]
+          })(),
+        ],
       }
     );
     const res = await router.resolve({
       path: "/api/33/followers",
-      httpMethod: "GET"
+      httpMethod: "GET",
     } as any, { timeout: 10000 });
 
     expect(res).to.deep.eq({
       statusCode: 500,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "error": "XX"
+        "error": "XX",
       },
       body: JSON.stringify({ error: `Error: 33`}),
     });

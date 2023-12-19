@@ -34,8 +34,8 @@ export const route = new Namespace("/api/messages", {}, {
               confirm: Type.String(),
             }),
           }),
-        ]),
-      )
+        ])
+      ),
     }, Presenters.MessageList, async function() {
       this.params.count?.toFixed(3);
       this.params.after?.slice(0, 3);

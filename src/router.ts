@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+// eslint-disable-next-line import/named
 import { Key as PathKey, pathToRegexp } from "path-to-regexp";
 
 import { TimeoutError } from ".";
@@ -20,8 +21,8 @@ export function flattenRoute(parents: Routes, route: Route<any, any> | Namespace
     return [
       [
         ...parents,
-        route
-      ]
+        route,
+      ],
     ];
   } else {
     return route
@@ -46,9 +47,9 @@ export class Router {
 
     this.operations = new Map(
       _.chain(this.flattenRoutes)
-        .map(routesList => _.last(routesList) as Route<any, any>)
-        .filter(operation => !!operation.operationId)
-        .groupBy(operation => operation.operationId)
+        .map((routesList) => _.last(routesList) as Route<any, any>)
+        .filter((operation) => !!operation.operationId)
+        .groupBy((operation) => operation.operationId)
         .mapValues((operations: Array<Route<any, any>>, operationId: string) => {
           if (operations.length > 1) {
             throw new Error(`${operations.length} Routes has duplicated operationId: "${operationId}"`);
@@ -61,7 +62,7 @@ export class Router {
 
     this.middlewares = options.middlewares || [];
 
-    this.middlewares.forEach(middleware => {
+    this.middlewares.forEach((middleware) => {
       if (this.middlewareMap.get(middleware.constructor as any)) {
         throw new Error(`Middleware<${middleware.constructor.name}> should be unique but not.`);
       }
@@ -110,7 +111,7 @@ export class Router {
         const pathRegExp = (() => {
           let p = this.routeToPathRegexpCache.get(endRoute);
           if (!p) {
-            const joinedPath = routesList.map(r => r.path).join("");
+            const joinedPath = routesList.map((r) => r.path).join("");
             const keys: PathKey[] = [];
             const regexp = pathToRegexp(joinedPath, keys);
             p = { keys, regexp };
@@ -161,7 +162,7 @@ export class Router {
                 for (const middleware of this.middlewares.slice().reverse()) {
                   const metadata = currentRoute.getMetadata(middleware.constructor as any);
                   currentRouteResponse = await middleware.after({
-                    routingContext, currentRoute, metadata, response: currentRouteResponse
+                    routingContext, currentRoute, metadata, response: currentRouteResponse,
                   });
                 }
                 return currentRouteResponse;
@@ -176,7 +177,7 @@ export class Router {
     return {
       statusCode: 404,
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ error: "Not Found" }),
     };
@@ -223,7 +224,7 @@ export class Router {
           timeoutHandle = setTimeout(() => {
             reject(new TimeoutError(route));
           }, this.routeTimeout || timeout);
-        })
+        }),
       ]).then((res) => {
         cleanTimeout();
         return Promise.resolve(res);

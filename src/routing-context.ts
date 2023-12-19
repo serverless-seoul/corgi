@@ -154,7 +154,7 @@ export class RoutingContext<
       if (errors.length > 0) {
         throw new ValidationError(
           errors.map((error) => error.message).join(", "),
-          errors.flatMap((error) => error.details),
+          errors.flatMap((error) => error.details)
         );
       }
     }

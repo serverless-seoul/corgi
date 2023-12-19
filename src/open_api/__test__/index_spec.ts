@@ -40,8 +40,8 @@ describe("OpenAPIRoute", () => {
               title: "The Height Schema.",
               description: "An explanation about the purpose of this instance.",
               default: 0,
-            }
-          }
+            },
+          },
         },
         id: {
           type: "integer",
@@ -68,9 +68,9 @@ describe("OpenAPIRoute", () => {
             title: "The 0 Schema.",
             description: "An explanation about the purpose of this instance.",
             default: "",
-          }
-        }
-      }
+          },
+        },
+      },
     },
     UserList: {
       type: "object",
@@ -78,11 +78,11 @@ describe("OpenAPIRoute", () => {
         data: {
           type: "array",
           items: {
-            $ref: "#/components/schemas/User"
-          }
-        }
-      }
-    }
+            $ref: "#/components/schemas/User",
+          },
+        },
+      },
+    },
   };
 
   const actionRoutes: Routes = [
@@ -94,7 +94,7 @@ describe("OpenAPIRoute", () => {
         name: Type.String(),
         tags: Type.Array(Type.Union([
           Type.Object({
-            name: Type.String()
+            name: Type.String(),
           }),
           Type.String(),
         ])),
@@ -118,8 +118,8 @@ describe("OpenAPIRoute", () => {
           [200]: {
             desc: "Success",
             schema: definitions.User,
-          }
-        }
+          },
+        },
       },
       {},
       async function() {
@@ -127,7 +127,7 @@ describe("OpenAPIRoute", () => {
           data: [{
             id: 100,
             username: "abcd",
-          }]
+          }],
         });
       }),
     Route.GET(
@@ -141,8 +141,8 @@ describe("OpenAPIRoute", () => {
             schema: {
               $ref: "#/components/schemas/UserList",
             },
-          }
-        }
+          },
+        },
       },
       {},
       async function() {
@@ -150,7 +150,7 @@ describe("OpenAPIRoute", () => {
           data: [{
             id: 100,
             username: "abcd",
-          }]
+          }],
         });
       }),
   ];
@@ -198,8 +198,8 @@ describe("OpenAPIRoute", () => {
       path: "/api/doc",
       httpMethod: "OPTIONS",
       headers: {
-        Origin: "https://www.vingle.net"
-      }
+        Origin: "https://www.vingle.net",
+      },
     } as any, { timeout: 10000 });
 
     expect(res.statusCode).to.be.eq(204);

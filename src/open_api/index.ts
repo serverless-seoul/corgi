@@ -75,7 +75,7 @@ export class OpenAPIGenerator {
 
     flattenRoutes(cascadedRoutes).forEach((routes) => {
       const endRoute = (routes[routes.length - 1] as Route<any, any>);
-      const corgiPath = routes.map(r => r.path).join("");
+      const corgiPath = routes.map((r) => r.path).join("");
       const OpenAPIPath = this.toOpenAPIPath(corgiPath);
 
       if (!paths[OpenAPIPath]) {
@@ -142,7 +142,7 @@ export class OpenAPIGenerator {
                         bodyParams.map(([name, param]) => [
                           name,
                           this.replaceReferencedSchemas(param.def, schemas),
-                        ] as const),
+                        ] as const)
                       ),
                       required: bodyParams.reduce((collection, [name, param]) => {
                         if (param.def[Optional] === undefined) {
@@ -176,8 +176,8 @@ export class OpenAPIGenerator {
             } else {
               return {
                 200: {
-                  description: "Success"
-                }
+                  description: "Success",
+                },
               };
             }
           })(),

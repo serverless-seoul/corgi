@@ -17,7 +17,7 @@ export class RootNamespace extends Namespace<Record<string, never>, Record<strin
             error: {
               id: this.requestId,
               ...errorFormatter.format(error),
-            }
+            },
           } as StandardErrorResponseBody, error.statusCode);
         } else {
           // For Non-Standard error,
@@ -25,11 +25,11 @@ export class RootNamespace extends Namespace<Record<string, never>, Record<strin
             error: {
               id: this.requestId,
               ...errorFormatter.format(error),
-            }
+            },
           } as StandardErrorResponseBody, 500);
         }
       },
-      children
+      children,
     });
 
     this.errorFormatter = errorFormatter;

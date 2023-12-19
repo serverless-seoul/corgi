@@ -17,7 +17,7 @@ describe("RootNamespace", () => {
         rootNamespace = new RootNamespace([
           Route.GET("/test", { operationId: "test" }, {}, async function() {
             throw new CustomError("TEST ERROR");
-          })
+          }),
         ]);
 
         const router = new Router([rootNamespace]);
@@ -79,8 +79,8 @@ describe("RootNamespace", () => {
             error: {
               id: "request-id",
               code: "Error",
-              message: "TEST ERROR"
-            }
+              message: "TEST ERROR",
+            },
           });
           expect(res.statusCode).to.be.eq(500);
         });
@@ -92,9 +92,9 @@ describe("RootNamespace", () => {
         const rootNamespace = new RootNamespace([
           Route.GET("/test", { operationId: "test" }, {}, async function() {
             throw new StandardError(422, {
-              code: "INVALID_REQUEST", message: "this request is invalid", metadata: { test: 1 }
+              code: "INVALID_REQUEST", message: "this request is invalid", metadata: { test: 1 },
             });
-          })
+          }),
         ]);
 
         const router = new Router([rootNamespace]);
@@ -111,7 +111,7 @@ describe("RootNamespace", () => {
             metadata: {
               test: 1,
             },
-          }
+          },
         });
         expect(res.statusCode).to.be.eq(422);
       });

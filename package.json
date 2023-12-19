@@ -47,6 +47,7 @@
     "chai": "4.3.7",
     "check-engine": "1.11.0",
     "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
     "mocha": "10.2.0",
     "semantic-release": "21.0.7",
     "typescript": "^5.3.3"

@@ -17,7 +17,7 @@ export class ValidationError extends Error {
 
   public constructor(
     public readonly message: string,
-    public readonly details: ErrorObject[],
+    public readonly details: ErrorObject[]
   ) {
     super(message);
   }

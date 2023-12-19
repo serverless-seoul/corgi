@@ -16,7 +16,7 @@ export const route = new Namespace("/api/me", {}, {
       operationId: "createMe",
       desc: "Create User",
     }, {
-      user: Parameter.Body(User)
+      user: Parameter.Body(User),
     }, Presenters.UserShow, async function() {
       return Fixtures.Users[0];
     }),

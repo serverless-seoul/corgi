@@ -13,9 +13,9 @@ describe("Route", () => {
           desc: "List of users that following me",
           async handler() {
             return this.json({
-              data: {}
+              data: {},
             });
-          }
+          },
         });
 
       expect(route.operationId).to.eq("getFollowers");
@@ -40,9 +40,9 @@ describe("Route", () => {
           ]),
           async handler() {
             return this.json({
-              data: {}
+              data: {},
             });
-          }
+          },
         });
 
       expect(route.getMetadata(A as any)).to.deep.eq({ x: 200 });

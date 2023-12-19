@@ -83,7 +83,7 @@ export class Route<
       operationId: options.operationId,
       metadata: options.metadata,
       params,
-      handler
+      handler,
     });
   }
   public readonly path: string;
@@ -104,7 +104,7 @@ export class Route<
     this.operationId = options.operationId;
     this.responses = options.responses ? new Map(
       _.toPairs(options.responses || {})
-       .map(pair => [Number(pair[0]), pair[1]] as [number, ResponseSchema])
+       .map((pair) => [Number(pair[0]), pair[1]] as [number, ResponseSchema])
     ) : undefined;
     this.metadata = options.metadata || new Map();
   }
