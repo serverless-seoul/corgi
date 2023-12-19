@@ -5,11 +5,8 @@ import { RoutingContext } from "./routing-context";
 export type MiddlewareConstructor<MiddlewareClass extends Middleware> = new(options: any) => MiddlewareClass;
 
 export class Middleware<Metadata= any> {
-  constructor(options: {} = {}) {
-    //
-  }
-
   // runs before the application, if it returns Promise<Response>, Routes are ignored and return the response
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async before(options: MiddlewareBeforeOptions<Metadata>): Promise<Response | void> {
     //
   }

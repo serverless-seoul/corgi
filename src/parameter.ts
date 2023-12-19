@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 
 export type ParameterInputType = "query" | "header" | "path" | "body";
 export interface ParameterDefinition<T extends TSchema> {

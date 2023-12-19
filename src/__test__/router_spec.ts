@@ -21,7 +21,7 @@ describe("Router", () => {
           }),
           Route.GET("/wrong-path", { operationId: "getIndex" }, {}, async function() {
             return this.json("");
-          })
+          }),
         ]);
       }).to.throw(Error, "2 Routes has duplicated operationId: \"getIndex\"");
     });
@@ -37,12 +37,12 @@ describe("Router", () => {
               headers: { "Content-Type": "application/json; charset=utf-8" },
               body: this.request.body!,
             };
-          })
+          }),
         ], {
           middlewares: [
             new TestMiddleware(),
             new TestMiddleware(),
-          ]
+          ],
         });
       }).to.throw("Middleware<TestMiddleware> should be unique but not");
     });
@@ -57,7 +57,7 @@ describe("Router", () => {
       const router = new Router([
         Route.GET("/", { operationId: "getIndex" }, {}, async function() {
           return this.json({});
-        })
+        }),
       ], {
         middlewares: [
           new M1(), new M2(),
@@ -80,7 +80,7 @@ describe("Router", () => {
               headers: { "Content-Type": "application/json; charset=utf-8" },
               body: this.request.body!,
             };
-          })
+          }),
         ], {
           middlewares: [
             new (class TestMiddleware extends Middleware {
@@ -101,7 +101,7 @@ describe("Router", () => {
                 return options.response;
               }
             })(),
-          ]
+          ],
         });
 
         let res;
@@ -140,16 +140,16 @@ describe("Router", () => {
           },
           children: [
             Route.GET("", { operationId: "getIndex" }, {}, async function() {
-              await new Promise<void>((resolve, reject) => {
+              await new Promise<void>((resolve) => {
                 setTimeout(() => {
                   resolve();
                 }, 200);
               });
 
               return this.json({});
-            })
-          ]
-        })
+            }),
+          ],
+        }),
       ]);
       const handler = router.handler();
 
@@ -165,7 +165,7 @@ describe("Router", () => {
             return 100;
           },
           awsRequestId: "request-id",
-        } as any,
+        } as any
       );
 
       expect(res).to.deep.eq({

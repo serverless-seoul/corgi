@@ -17,7 +17,7 @@ describe("RootNamespace", () => {
         rootNamespace = new RootNamespace([
           Route.GET("/test", { operationId: "test" }, {}, async function() {
             throw new CustomError("TEST ERROR");
-          })
+          }),
         ]);
 
         const router = new Router([rootNamespace]);
@@ -27,10 +27,10 @@ describe("RootNamespace", () => {
         } as any, { requestId: "request-id", timeout: 10000 });
       };
 
-      context("with CORGI_ERROR_PASSSWORD", () => {
+      context("with CORGI_ERROR_PASSWORD", () => {
         beforeEach(() => {
           // Must be 16 letters.
-          process.env.CORGI_ERROR_PASSSWORD = "9vApxLk5G3PAsJrM";
+          process.env.CORGI_ERROR_PASSWORD = "9vApxLk5G3PAsJrM";
         });
 
         it("should handler general error and build json response, with encrpyted message", async () => {
@@ -41,7 +41,6 @@ describe("RootNamespace", () => {
           expect(decrypted.name).to.be.eq("Error");
 
           expect(decrypted.stack[0]).to.be.eq("Error: TEST ERROR");
-          // tslint:disable
           // Since Stack keep changes depends on CI env, check only the first line
           // "    at RoutingContext.<anonymous> (/Users/lea/Works/corgi/dst/__test__/root-namespace_spec.js:26:35)",
           // "    at Generator.next (<anonymous>)",
@@ -64,15 +63,13 @@ describe("RootNamespace", () => {
           // "    at /Users/lea/Works/corgi/node_modules/async-listener/glue.js:188:31",
           // "    at <anonymous>",
           // "    at process._tickCallback (internal/process/next_tick.js:188:7)",
-          // tslint:enable
           expect(res.statusCode).to.be.eq(500);
-
         });
       });
 
-      context("without CORGI_ERROR_PASSSWORD", () => {
+      context("without CORGI_ERROR_PASSWORD", () => {
         beforeEach(() => {
-          delete process.env.CORGI_ERROR_PASSSWORD;
+          delete process.env.CORGI_ERROR_PASSWORD;
         });
 
         it("should handler general error and build json response", async () => {
@@ -82,8 +79,8 @@ describe("RootNamespace", () => {
             error: {
               id: "request-id",
               code: "Error",
-              message: "TEST ERROR"
-            }
+              message: "TEST ERROR",
+            },
           });
           expect(res.statusCode).to.be.eq(500);
         });
@@ -95,9 +92,9 @@ describe("RootNamespace", () => {
         const rootNamespace = new RootNamespace([
           Route.GET("/test", { operationId: "test" }, {}, async function() {
             throw new StandardError(422, {
-              code: "INVALID_REQUEST", message: "this request is invalid", metadata: { test: 1 }
+              code: "INVALID_REQUEST", message: "this request is invalid", metadata: { test: 1 },
             });
-          })
+          }),
         ]);
 
         const router = new Router([rootNamespace]);
@@ -114,7 +111,7 @@ describe("RootNamespace", () => {
             metadata: {
               test: 1,
             },
-          }
+          },
         });
         expect(res.statusCode).to.be.eq(422);
       });

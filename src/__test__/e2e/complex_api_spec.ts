@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 import { expect } from "chai";
 
 import {
@@ -24,7 +24,7 @@ describe("Calling complex API", () => {
             desc: "List of users that following me",
             async handler() {
               return this.json({
-                data: {}
+                data: {},
               });
             }}
           ),
@@ -116,9 +116,9 @@ describe("Calling complex API", () => {
                 ],
               }),
             ],
-          })
-        ]
-      })
+          }),
+        ],
+      }),
     ];
 
     const router = new Router(routes);
@@ -129,12 +129,12 @@ describe("Calling complex API", () => {
         update: {
           fieldA: 12345,
           fieldB: 54321,
-        }
+        },
       }),
       queryStringParameters: {
         testId: "12345",
         not_allowed_param: "xxx",
-      }
+      },
     } as any, { timeout: 10000 })).to.deep.eq({
       statusCode: 200,
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -143,13 +143,13 @@ describe("Calling complex API", () => {
         userId: 33,
         update: {
           fieldA: 12345,
-        }
-      })
+        },
+      }),
     });
     expect(await router.resolve({
       path: "/api/33/followings",
       httpMethod: "PATCH",
-      queryStringParameters: { testId: "12345" }
+      queryStringParameters: { testId: "12345" },
     } as any, { timeout: 10000 })).to.deep.eq({
       statusCode: 200,
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -227,16 +227,16 @@ describe("Calling complex API", () => {
                   this.params.bar,
                 ]);
               }),
-            ]
-          })
-        ]
-      })
+            ],
+          }),
+        ],
+      }),
     ];
 
     const router = new Router(routes);
     const res = await router.resolve({
       path: "/a/10/b/20",
-      httpMethod: "GET"
+      httpMethod: "GET",
     } as any, { timeout: 10000 });
 
     expect(res.statusCode).to.be.eq(200);
@@ -246,7 +246,7 @@ describe("Calling complex API", () => {
       }, {
         a: 10,
         b: 20,
-      }
+      },
     ]);
     expect(JSON.parse(res.body)).to.be.deep.eq([
       {
@@ -254,7 +254,7 @@ describe("Calling complex API", () => {
       }, {
         a: 10,
         b: 20,
-      }
+      },
     ]);
   });
 });
@@ -267,7 +267,7 @@ describe("Global Error Handling", () => {
           if (error instanceof ValidationError) {
             return this.json(
               {
-                errors: error.details.map(e => e.message),
+                errors: error.details.map((e) => e.message),
               },
               422
             );
@@ -288,11 +288,11 @@ describe("Global Error Handling", () => {
                   testId,
                   userId,
                 });
-              })
-            ]
-          })
-        ]
-      })
+              }),
+            ],
+          }),
+        ],
+      }),
     ];
 
     const router = new Router(routes);
@@ -300,7 +300,7 @@ describe("Global Error Handling", () => {
       path: "/api/users/12345",
       httpMethod: "GET",
       queryStringParameters: {
-      }
+      },
     } as any, { timeout: 10000 });
 
     expect(res).to.deep.eq({

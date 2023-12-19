@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 import { expect } from "chai";
 
 import * as qs from "qs";
@@ -47,7 +47,7 @@ describe("RoutingContext", () => {
               c: true,
               d: null,
             }]),
-          }
+          },
         } as any, "request-id", {
           userId: "33",
           interest: "%ED%94%BD%EC%8B%9C",
@@ -82,8 +82,8 @@ describe("RoutingContext", () => {
           update: Parameter.Body(Type.Object({
             fieldA: Type.Number(),
             fieldC: Type.Object({
-              c: Type.Number()
-            })
+              c: Type.Number(),
+            }),
           })),
           userId: Parameter.Path(Type.Number()),
           interest: Parameter.Path(Type.String()),
@@ -97,7 +97,7 @@ describe("RoutingContext", () => {
             fieldA: 12345,
             fieldC: {
               c: 100,
-            }
+            },
           },
           userId: 33,
           interest: "픽시",
@@ -130,8 +130,8 @@ describe("RoutingContext", () => {
               fieldB: 54321,
               fieldC: {
                 c: 100,
-              }
-            }
+              },
+            },
           }),
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -144,7 +144,7 @@ describe("RoutingContext", () => {
             "arrayParameter[1]": "2",
             "arrayParameter[2]": "3",
             "arrayParameter[3]": "4",
-          }
+          },
         } as any, "request-id", {
             userId: "33",
             interest: "%ED%94%BD%EC%8B%9C",
@@ -156,8 +156,8 @@ describe("RoutingContext", () => {
           update: Parameter.Body(Type.Object({
             fieldA: Type.Number(),
             fieldC: Type.Object({
-              c: Type.Number()
-            })
+              c: Type.Number(),
+            }),
           })),
           userId: Parameter.Path(Type.Number()),
           interest: Parameter.Path(Type.String()),
@@ -171,7 +171,7 @@ describe("RoutingContext", () => {
             fieldA: 12345,
             fieldC: {
               c: 100,
-            }
+            },
           },
           userId: 33,
           interest: "픽시",
@@ -189,8 +189,8 @@ describe("RoutingContext", () => {
               fieldB: 54321,
               fieldC: {
                 c: 100,
-              }
-            }
+              },
+            },
           }),
           queryStringParameters: {
             "testId": "12345",
@@ -201,7 +201,7 @@ describe("RoutingContext", () => {
             "arrayParameter[1]": "2",
             "arrayParameter[2]": "3",
             "arrayParameter[3]": "4",
-          }
+          },
         } as any, "request-id", {
           userId: "33",
           interest: "100%users",
@@ -230,7 +230,7 @@ describe("RoutingContext", () => {
             fieldA: 12345,
             fieldC: {
               c: 100,
-            }
+            },
           },
           userId: 33,
           interest: "100%users",
@@ -258,7 +258,7 @@ describe("RoutingContext", () => {
                 Type.Array(Type.Number()),
                 Type.Null(),
               ]),
-            })),
+            }))
           ),
         });
 
@@ -306,9 +306,9 @@ describe("RoutingContext", () => {
       const noop = (() => undefined) as any;
 
       // decorate target method to trap method calls
-      (context as any).normalizeHeaders = function() {
+      (context as any).normalizeHeaders = function(...args: any[]) {
         callCount++;
-        return fn.apply(context, arguments);
+        return fn.apply(context, args);
       };
 
       // normalizeHeaders should be called lazily

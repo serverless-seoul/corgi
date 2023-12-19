@@ -11,8 +11,8 @@ describe("Namespace", () => {
           children: [
             Route.GET("/test", { operationId: "test" }, {}, async function() {
               return this.json({});
-            })
-          ]
+            }),
+          ],
         });
 
       expect(namespace).to.be.instanceof(Namespace);

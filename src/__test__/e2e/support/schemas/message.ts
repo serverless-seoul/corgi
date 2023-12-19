@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 import { DataLayout, PaginatedDataLayout } from "./layout";
 import { User } from "./user";
 

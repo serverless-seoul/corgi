@@ -13,7 +13,7 @@ This is hard fork of [vingle-corgi](https://github.com/serverless-seoul/corgi) f
 
 ```typescript
 import { Namespace, Router, ValidationError } from "@serverless-seoul/corgi";
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 
 const router = new Router([
   new Namespace('/api/:userId', {

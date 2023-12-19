@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 import * as _ from "lodash";
 
 import * as LambdaProxy from "./lambda-proxy";
@@ -12,7 +12,8 @@ export type RouteHandler<
   T extends { [P in keyof T]: ParameterDefinition<any> },
   U extends { [P in keyof U]: TSchema }
 > = (this: RoutingContext<T, U>) => Promise<LambdaProxy.Response>;
-export type RouteMetadata = Map<Function, any>; // tslint:disable-line
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type RouteMetadata = Map<Function, any>;
 
 // ---- Route
 export class Route<
@@ -63,7 +64,6 @@ export class Route<
   >(path: string, options: RouteSimplifiedOptions, params: T, handler: RouteHandler<T, U>) {
     return this._factory(path, "HEAD", options, params, handler);
   }
-  // tslint:enable:max-line-length
 
   private static _factory<
     T extends { [P in keyof T]: ParameterDefinition<any> },
@@ -83,7 +83,7 @@ export class Route<
       operationId: options.operationId,
       metadata: options.metadata,
       params,
-      handler
+      handler,
     });
   }
   public readonly path: string;
@@ -104,7 +104,7 @@ export class Route<
     this.operationId = options.operationId;
     this.responses = options.responses ? new Map(
       _.toPairs(options.responses || {})
-       .map(pair => [Number(pair[0]), pair[1]] as [number, ResponseSchema])
+       .map((pair) => [Number(pair[0]), pair[1]] as [number, ResponseSchema])
     ) : undefined;
     this.metadata = options.metadata || new Map();
   }

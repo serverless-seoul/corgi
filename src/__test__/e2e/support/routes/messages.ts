@@ -1,4 +1,4 @@
-import { Type } from "@serverless-seoul/typebox";
+import { Type } from "@sinclair/typebox";
 
 import { Namespace, Parameter, PresenterRouteFactory, StandardError } from "../../../../index";
 import * as Fixtures from "../fixtures";
@@ -14,6 +14,28 @@ export const route = new Namespace("/api/messages", {}, {
     }, {
       count: Parameter.Query(Type.Optional(Type.Integer({ minimum: 1, maximum: 100 }))),
       after: Parameter.Query(Type.Optional(Type.String())),
+      complex: Parameter.Body(
+        Type.Union([
+          Type.Object({
+            type: Type.Literal("feedback"),
+            data: Type.Object({
+              id: Type.String(),
+              title: Type.String(),
+              subtitle: Type.String(),
+              textPlaceholder: Type.String(),
+            }),
+          }),
+          Type.Object({
+            type: Type.Literal("alert"),
+            data: Type.Object({
+              titleIcon: Type.String(),
+              title: Type.String(),
+              description: Type.String(),
+              confirm: Type.String(),
+            }),
+          }),
+        ])
+      ),
     }, Presenters.MessageList, async function() {
       this.params.count?.toFixed(3);
       this.params.after?.slice(0, 3);

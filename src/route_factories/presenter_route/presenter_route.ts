@@ -1,4 +1,4 @@
-import { TSchema } from "@serverless-seoul/typebox";
+import { TSchema } from "@sinclair/typebox";
 import {
   ParameterDefinition,
 } from "../../parameter";
@@ -52,7 +52,6 @@ export class PresenterRouteFactory {
   }
 
   // Simplified Constructors
-  // tslint:disable:max-line-length
   public static GET<
     Input,
     Output,
@@ -109,5 +108,4 @@ export class PresenterRouteFactory {
   >(path: string, options: RouteSimplifiedOptions, params: T, presenter: Presenter<Input, Output>, handler: PresenterRouteHandler<Input, T, U>) {
     return this.create(path, "HEAD", options, params, presenter, handler);
   }
-  // tslint:enable:max-line-length
 }

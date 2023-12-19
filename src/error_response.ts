@@ -70,7 +70,7 @@ export class ErrorResponseFormatter {
           message: error.message,
           stack: (error.stack || "").split("\n"),
         }),
-        "utf8",
+        "utf8"
       );
 
       const encrypted = Buffer.concat([

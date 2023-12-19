@@ -1,6 +1,7 @@
-import { OptionalModifier, TSchema } from "@serverless-seoul/typebox";
+import { Optional, TSchema } from "@sinclair/typebox";
 import * as OpenApi from "openapi3-ts";
 import * as traverse from "traverse";
+import * as _ from "lodash";
 
 import * as LambdaProxy from "../lambda-proxy";
 
@@ -74,7 +75,7 @@ export class OpenAPIGenerator {
 
     flattenRoutes(cascadedRoutes).forEach((routes) => {
       const endRoute = (routes[routes.length - 1] as Route<any, any>);
-      const corgiPath = routes.map(r => r.path).join("");
+      const corgiPath = routes.map((r) => r.path).join("");
       const OpenAPIPath = this.toOpenAPIPath(corgiPath);
 
       if (!paths[OpenAPIPath]) {
@@ -109,13 +110,14 @@ export class OpenAPIGenerator {
                   }));
               } else {
                 return Object.entries<ParameterDefinition<any>>(route.params)
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   .filter(([name, param]) => param.in !== "body")
                   .map(([name, param]): OpenApi.ParameterObject => ({
                     in: param.in as Exclude<ParameterInputType, "body">,
                     name,
                     description: param.def.description,
                     schema: this.replaceReferencedSchemas(param.def, schemas),
-                    required: param.in === "path" || param.def.modifier !== OptionalModifier,
+                    required: param.in === "path" || param.def[Optional] === undefined,
                   }));
               }
             }),
@@ -123,6 +125,7 @@ export class OpenAPIGenerator {
             const bodyParams = routes
               .flatMap((route) => route instanceof Route
                 ? Object.entries<ParameterDefinition<any>>(route.params)
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .filter(([name, param]: [string, ParameterDefinition<any>]) => param.in === "body")
                 : []
               );
@@ -139,10 +142,10 @@ export class OpenAPIGenerator {
                         bodyParams.map(([name, param]) => [
                           name,
                           this.replaceReferencedSchemas(param.def, schemas),
-                        ] as const),
+                        ] as const)
                       ),
                       required: bodyParams.reduce((collection, [name, param]) => {
-                        if (param.def.modifier !== OptionalModifier) {
+                        if (param.def[Optional] === undefined) {
                           collection.push(name);
                         }
 
@@ -173,8 +176,8 @@ export class OpenAPIGenerator {
             } else {
               return {
                 200: {
-                  description: "Success"
-                }
+                  description: "Success",
+                },
               };
             }
           })(),
@@ -206,15 +209,11 @@ export class OpenAPIGenerator {
   }
 
   private mergeSchemas(schemas: OpenApi.SchemasObject): OpenApi.SchemasObject {
-    const lookupTable = new Map<any, string>(
-      Object.entries(schemas).map(([key, value]) => [value, key]),
-    );
-
     const tree = traverse(schemas);
 
     const references = tree.reduce(function(hash, node) {
       if (typeof node === "object") {
-        const referencedSchema = lookupTable.get(node);
+        const referencedSchema = _.findKey(schemas, (value) => _.isEqual(value, node));
         if (referencedSchema && this.level > 1) {
           const path = dotPath(this.path);
           hash[path] = referencedSchema;
@@ -236,15 +235,11 @@ export class OpenAPIGenerator {
   }
 
   private replaceReferencedSchemas(target: TSchema, schemas: OpenApi.SchemasObject): OpenApi.SchemaObject {
-    const lookupTable = new Map<any, string>(
-      Object.entries(schemas).map(([key, value]) => [value, key]),
-    );
-
     const tree = traverse(target);
 
     const references = tree.reduce(function(hash, node) {
       if (typeof node === "object") {
-        const referencedSchema = lookupTable.get(node);
+        const referencedSchema = _.findKey(schemas, (value) => _.isEqual(value, node));
         if (referencedSchema) {
           const path = dotPath(this.path);
           hash[path] = referencedSchema;
