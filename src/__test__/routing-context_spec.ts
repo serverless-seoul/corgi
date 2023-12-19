@@ -306,9 +306,9 @@ describe("RoutingContext", () => {
       const noop = (() => undefined) as any;
 
       // decorate target method to trap method calls
-      (context as any).normalizeHeaders = function() {
+      (context as any).normalizeHeaders = function(...args: any[]) {
         callCount++;
-        return fn.apply(context, arguments);
+        return fn.apply(context, args);
       };
 
       // normalizeHeaders should be called lazily

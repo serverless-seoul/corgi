@@ -12,6 +12,7 @@ export type RouteHandler<
   T extends { [P in keyof T]: ParameterDefinition<any> },
   U extends { [P in keyof U]: TSchema }
 > = (this: RoutingContext<T, U>) => Promise<LambdaProxy.Response>;
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type RouteMetadata = Map<Function, any>;
 
 // ---- Route

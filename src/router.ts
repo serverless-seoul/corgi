@@ -193,7 +193,7 @@ export class Router {
       // This is for parameter and before, so Top -> Bottom
       for (const namespace of namespaces.slice().reverse()) {
         // Parameter Validation
-        const params = _.mapValues(namespace.params, (schema, name) => {
+        const params = _.mapValues(namespace.params, (schema) => {
           return {
             in: "path" as const,
             def: schema,

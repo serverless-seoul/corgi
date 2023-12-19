@@ -110,6 +110,7 @@ export class OpenAPIGenerator {
                   }));
               } else {
                 return Object.entries<ParameterDefinition<any>>(route.params)
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   .filter(([name, param]) => param.in !== "body")
                   .map(([name, param]): OpenApi.ParameterObject => ({
                     in: param.in as Exclude<ParameterInputType, "body">,
@@ -124,6 +125,7 @@ export class OpenAPIGenerator {
             const bodyParams = routes
               .flatMap((route) => route instanceof Route
                 ? Object.entries<ParameterDefinition<any>>(route.params)
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .filter(([name, param]: [string, ParameterDefinition<any>]) => param.in === "body")
                 : []
               );

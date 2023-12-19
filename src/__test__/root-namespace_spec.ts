@@ -27,10 +27,10 @@ describe("RootNamespace", () => {
         } as any, { requestId: "request-id", timeout: 10000 });
       };
 
-      context("with CORGI_ERROR_PASSSWORD", () => {
+      context("with CORGI_ERROR_PASSWORD", () => {
         beforeEach(() => {
           // Must be 16 letters.
-          process.env.CORGI_ERROR_PASSSWORD = "9vApxLk5G3PAsJrM";
+          process.env.CORGI_ERROR_PASSWORD = "9vApxLk5G3PAsJrM";
         });
 
         it("should handler general error and build json response, with encrpyted message", async () => {
@@ -67,9 +67,9 @@ describe("RootNamespace", () => {
         });
       });
 
-      context("without CORGI_ERROR_PASSSWORD", () => {
+      context("without CORGI_ERROR_PASSWORD", () => {
         beforeEach(() => {
-          delete process.env.CORGI_ERROR_PASSSWORD;
+          delete process.env.CORGI_ERROR_PASSWORD;
         });
 
         it("should handler general error and build json response", async () => {
