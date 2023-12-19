@@ -1,6 +1,7 @@
 import { Optional, TSchema } from "@sinclair/typebox";
 import * as OpenApi from "openapi3-ts";
 import * as traverse from "traverse";
+import * as _ from "lodash";
 
 import * as LambdaProxy from "../lambda-proxy";
 
@@ -115,7 +116,7 @@ export class OpenAPIGenerator {
                     name,
                     description: param.def.description,
                     schema: this.replaceReferencedSchemas(param.def, schemas),
-                    required: param.in === "path" || param.def.modifier !== Optional,
+                    required: param.in === "path" || param.def[Optional] === undefined,
                   }));
               }
             }),
@@ -142,7 +143,7 @@ export class OpenAPIGenerator {
                         ] as const),
                       ),
                       required: bodyParams.reduce((collection, [name, param]) => {
-                        if (param.def.modifier !== Optional) {
+                        if (param.def[Optional] === undefined) {
                           collection.push(name);
                         }
 
@@ -206,15 +207,11 @@ export class OpenAPIGenerator {
   }
 
   private mergeSchemas(schemas: OpenApi.SchemasObject): OpenApi.SchemasObject {
-    const lookupTable = new Map<any, string>(
-      Object.entries(schemas).map(([key, value]) => [value, key]),
-    );
-
     const tree = traverse(schemas);
 
     const references = tree.reduce(function(hash, node) {
       if (typeof node === "object") {
-        const referencedSchema = lookupTable.get(node);
+        const referencedSchema = _.findKey(schemas, (value) => _.isEqual(value, node));
         if (referencedSchema && this.level > 1) {
           const path = dotPath(this.path);
           hash[path] = referencedSchema;
@@ -236,15 +233,11 @@ export class OpenAPIGenerator {
   }
 
   private replaceReferencedSchemas(target: TSchema, schemas: OpenApi.SchemasObject): OpenApi.SchemaObject {
-    const lookupTable = new Map<any, string>(
-      Object.entries(schemas).map(([key, value]) => [value, key]),
-    );
-
     const tree = traverse(target);
 
     const references = tree.reduce(function(hash, node) {
       if (typeof node === "object") {
-        const referencedSchema = lookupTable.get(node);
+        const referencedSchema = _.findKey(schemas, (value) => _.isEqual(value, node));
         if (referencedSchema) {
           const path = dotPath(this.path);
           hash[path] = referencedSchema;

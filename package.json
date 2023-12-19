@@ -60,6 +60,6 @@
     "openapi3-ts": "2.0.1",
     "path-to-regexp": "^6.2.0",
     "qs": "^6.10.1",
-    "traverse": "^0.6.6"
+    "traverse": "^0.6.7"
   }
 }

@@ -28,6 +28,42 @@
             }
           }
         }
+      },
+      "post": {
+        "description": "Create User",
+        "operationId": "createMe",
+        "parameters": [],
+        "requestBody": {
+          "description": "Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "required": [
+                  "user"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserShow"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/messages": {
@@ -54,6 +90,98 @@
             "required": false
           }
         ],
+        "requestBody": {
+          "description": "Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "complex": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "feedback",
+                            "type": "string"
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "subtitle": {
+                                "type": "string"
+                              },
+                              "textPlaceholder": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "title",
+                              "subtitle",
+                              "textPlaceholder"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "data"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "alert",
+                            "type": "string"
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "titleIcon": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "confirm": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "titleIcon",
+                              "title",
+                              "description",
+                              "confirm"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "data"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "complex"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -83,7 +211,9 @@
                     "$ref": "#/components/schemas/Message"
                   },
                   "attachments": {
+                    "type": "array",
                     "items": {
+                      "type": "object",
                       "properties": {
                         "name": {
                           "type": "string"
@@ -95,10 +225,11 @@
                           "type": "string"
                         }
                       },
-                      "required": ["name", "size"],
-                      "type": "object"
-                    },
-                    "type": "array"
+                      "required": [
+                        "name",
+                        "size"
+                      ]
+                    }
                   }
                 },
                 "required": [
@@ -233,16 +364,12 @@
           "status": {
             "anyOf": [
               {
-                "type": "string",
-                "enum": [
-                  "active"
-                ]
+                "const": "active",
+                "type": "string"
               },
               {
-                "type": "string",
-                "enum": [
-                  "deleted"
-                ]
+                "const": "deleted",
+                "type": "string"
               }
             ]
           },
@@ -304,10 +431,8 @@
             "type": "object",
             "properties": {
               "success": {
-                "type": "boolean",
-                "enum": [
-                  true
-                ]
+                "const": true,
+                "type": "boolean"
               }
             },
             "required": [
