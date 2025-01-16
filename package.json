@@ -61,7 +61,7 @@
     "aws-xray-sdk-core": ">=1.1.6",
     "lodash": "^4.17.21",
     "openapi3-ts": "2.0.2",
-    "path-to-regexp": "^6.2.0",
+    "path-to-regexp": "^8.0.0",
     "qs": "^6.10.1",
     "traverse": "^0.6.7"
   }
