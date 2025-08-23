@@ -6,7 +6,7 @@ jobs:
     container: node:18
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Prepare
         run: npm ci
       - name: Lint
