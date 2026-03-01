@@ -57,7 +57,7 @@
     "@types/aws-lambda": "^8.10.76",
     "@types/node": "^12.12.62",
     "@types/qs": "^6.9.6",
-    "ajv": "^6.12.6",
+    "ajv": "^8.0.0",
     "aws-xray-sdk-core": ">=1.1.6",
     "lodash": "^4.17.21",
     "openapi3-ts": "2.0.2",
