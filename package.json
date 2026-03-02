@@ -37,7 +37,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "11.0.4",
+    "@semantic-release/github": "11.0.6",
     "@types/chai": "5.2.3",
     "@types/lodash": "4.17.24",
     "@types/mocha": "10.0.10",
@@ -49,7 +49,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "mocha": "11.7.5",
-    "semantic-release": "24.2.7",
+    "semantic-release": "24.2.9",
     "typescript": "^5.3.3"
   },
   "dependencies": {
